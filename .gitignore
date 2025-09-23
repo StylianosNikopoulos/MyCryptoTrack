@@ -32,3 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 src/main/resources/application.properties
+alert-service/application.properties
+api-gateway/application.properties
+auth-service/application.properties
+market-ingest-service/application.properties
