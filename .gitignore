@@ -37,3 +37,6 @@ api-gateway/application.properties
 auth-service/application.properties
 market-ingest-service/application.properties
 .env
+api-gateway/src/main/resources/application.properties
+auth-service/src/main/resources/application.properties
+market-ingest-service/src/main/resources/application.properties
