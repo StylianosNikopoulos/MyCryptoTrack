@@ -36,3 +36,4 @@ alert-service/application.properties
 api-gateway/application.properties
 auth-service/application.properties
 market-ingest-service/application.properties
+.env
