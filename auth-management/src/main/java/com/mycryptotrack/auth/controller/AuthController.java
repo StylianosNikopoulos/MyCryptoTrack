@@ -4,7 +4,7 @@ import com.mycryptotrack.auth.dto.UserDto;
 import com.mycryptotrack.auth.exception.CustomException;
 import com.mycryptotrack.auth.model.User;
 import com.mycryptotrack.auth.security.JwtUtil;
-import com.mycryptotrack.auth.service.UserService;
+import com.mycryptotrack.auth.service.auth.AuthImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 class AuthController {
 
-    private final UserService userService;
+    private final AuthImpl userService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 

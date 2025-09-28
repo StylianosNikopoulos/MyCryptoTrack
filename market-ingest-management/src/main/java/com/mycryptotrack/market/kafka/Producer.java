@@ -2,7 +2,7 @@ package com.mycryptotrack.market.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mycryptotrack.market.dto.MarketDataDto;
+import com.mycryptotrack.common.dto.MarketDataDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;

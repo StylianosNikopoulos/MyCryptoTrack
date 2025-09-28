@@ -1,4 +1,4 @@
-package com.mycryptotrack.market.util;
+package com.mycryptotrack.market.service.apiclient;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -9,11 +9,11 @@ import java.time.Duration;
 import java.util.Map;
 
 @Component
-public class ApiClient {
+public class ApiClientImpl implements ApiClientService {
 
     private final WebClient webClient;
 
-    public ApiClient(@Value("${market.api.base-url}") String baseUrl) {
+    public ApiClientImpl(@Value("${market.api.base-url}") String baseUrl) {
         this.webClient = WebClient.builder()
                 .baseUrl(baseUrl)
                 .build();

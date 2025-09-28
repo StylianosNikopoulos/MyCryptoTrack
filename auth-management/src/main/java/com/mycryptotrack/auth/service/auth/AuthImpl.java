@@ -1,4 +1,4 @@
-package com.mycryptotrack.auth.service;
+package com.mycryptotrack.auth.service.auth;
 
 import com.mycryptotrack.auth.exception.CustomException;
 import com.mycryptotrack.auth.model.User;
@@ -12,11 +12,10 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class AuthImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
 
     public User register(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -27,7 +26,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
-
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);

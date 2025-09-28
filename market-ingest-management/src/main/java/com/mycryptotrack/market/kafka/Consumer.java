@@ -1,7 +1,7 @@
 package com.mycryptotrack.market.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mycryptotrack.market.dto.MarketDataDto;
+import com.mycryptotrack.common.dto.MarketDataDto;
 import com.mycryptotrack.market.model.MarketData;
 import com.mycryptotrack.market.repository.MarketDataRepository;
 import lombok.RequiredArgsConstructor;

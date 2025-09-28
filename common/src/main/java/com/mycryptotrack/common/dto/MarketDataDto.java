@@ -1,7 +1,7 @@
-package com.mycryptotrack.market.dto;
+package com.mycryptotrack.common.dto;
+
 
 import lombok.*;
-
 import java.time.Instant;
 
 @Getter

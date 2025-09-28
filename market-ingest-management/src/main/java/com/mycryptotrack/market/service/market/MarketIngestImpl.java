@@ -1,9 +1,9 @@
-package com.mycryptotrack.market.service;
+package com.mycryptotrack.market.service.market;
 
-import com.mycryptotrack.market.dto.MarketDataDto;
+import com.mycryptotrack.common.dto.MarketDataDto;
 import com.mycryptotrack.market.exception.CustomException;
 import com.mycryptotrack.market.kafka.Producer;
-import com.mycryptotrack.market.util.ApiClient;
+import com.mycryptotrack.market.service.apiclient.ApiClientImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,9 @@ import reactor.core.publisher.Flux;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MarketIngestService {
+public class MarketIngestImpl implements MarketIngestService {
 
-    private final ApiClient apiClient;
+    private final ApiClientImpl apiClient;
     private final Producer producer;
     private final MarketDataRepository repository;
     private final List<MarketDataDto> latestData = new CopyOnWriteArrayList<>();
@@ -31,40 +31,20 @@ public class MarketIngestService {
         fetchAllSymbolsAsync();
     }
 
+    public List<MarketDataDto> fetchOnceAndReturn() {
+        fetchAllSymbolsAsync();
+        return List.copyOf(latestData);
+    }
+
+    public List<MarketDataDto> getLatestData() {
+        return List.copyOf(latestData);
+    }
+
     private void fetchAllSymbolsAsync() {
         Flux<Map<String, Object>> allPrices = apiClient.getAllPrices();
 
         allPrices
-                .map(data -> {
-                    try {
-                        String symbol = data.get("symbol").toString();
-                        double price = Double.parseDouble(data.get("price").toString());
-
-                        MarketDataDto dto = MarketDataDto.builder()
-                                .symbol(symbol)
-                                .price(price)
-                                .fetchedAt(Instant.now())
-                                .build();
-
-                        // Send to Kafka
-                        producer.send(dto);
-
-                        // Update latestData
-                        latestData.removeIf(d -> d.getSymbol().equals(symbol));
-                        latestData.add(dto);
-
-                        MarketData entity = MarketData.builder()
-                                .symbol(symbol)
-                                .price(price)
-                                .fetchedAt(dto.getFetchedAt())
-                                .build();
-
-                        return entity;
-                    } catch (Exception ex) {
-                        log.error("Error processing symbol: {}", data.get("symbol"), ex);
-                        throw new CustomException("Failed to process symbol: " + data.get("symbol"));
-                    }
-                })
+                .map(this::mapToEntityAndDto)
                 .collectList()
                 .doOnNext(entities -> {
                     entities.forEach(entity -> {
@@ -77,19 +57,41 @@ public class MarketIngestService {
                     });
                     log.info("Saved/updated {} market entries to DB", entities.size());
                 })
-
                 .doOnError(ex -> log.error("Error fetching Binance data", ex))
                 .subscribe();
     }
 
-    public List<MarketDataDto> fetchOnceAndReturn() {
-        fetchAllSymbolsAsync();
-        return List.copyOf(latestData);
-    }
+    private MarketData mapToEntityAndDto(Map<String, Object> data) {
+        try {
+            String symbol = data.get("symbol").toString();
+            double price = Double.parseDouble(data.get("price").toString());
+            Instant fetchedAt = Instant.now();
 
-    public List<MarketDataDto> getLatestData() {
-        return List.copyOf(latestData);
+            // Create DTO
+            MarketDataDto dto = MarketDataDto.builder()
+                    .symbol(symbol)
+                    .price(price)
+                    .fetchedAt(fetchedAt)
+                    .build();
+
+            // Send to Kafka
+            producer.send(dto);
+
+            // Update latestData cache
+            latestData.removeIf(d -> d.getSymbol().equals(symbol));
+            latestData.add(dto);
+
+            // Return entity
+            return MarketData.builder()
+                    .symbol(symbol)
+                    .price(price)
+                    .fetchedAt(fetchedAt)
+                    .build();
+
+        } catch (Exception ex) {
+            log.error("Error processing symbol: {}", data.get("symbol"), ex);
+            throw new CustomException("Failed to process symbol: " + data.get("symbol"));
+        }
     }
 }
-
 
