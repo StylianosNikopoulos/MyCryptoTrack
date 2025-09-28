@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -5,33 +6,34 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- Inherit dependency management from parent -->
   <parent>
     <groupId>com.mycryptotrack</groupId>
     <artifactId>mycryptotrack</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.mycryptotrack.auth</groupId>
-  <artifactId>auth-service</artifactId>
+  <groupId>com.mycryptotrack.market</groupId>
+  <artifactId>market-ingest-management</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Auth Service</name>
+  <name>Market Ingest Service</name>
 
   <dependencies>
-    <!-- Web + JPA -->
+    <!-- Spring Boot Web -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>2.2.0</version>
+    </dependency>
+
+    <!-- JPA (if needed) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-
-    <!-- Security -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
     <!-- Kafka -->
@@ -40,12 +42,6 @@
       <artifactId>spring-kafka</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-    </dependency>
-
-
     <!-- PostgreSQL -->
     <dependency>
       <groupId>org.postgresql</groupId>
@@ -53,22 +49,11 @@
       <scope>runtime</scope>
     </dependency>
 
-
-
     <!-- Lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.30</version>
-      <scope>provided</scope>
-    </dependency>
-
-
-    <!-- Swagger / OpenAPI -->
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>2.2.0</version>
+      <optional>true</optional>
     </dependency>
 
     <!-- Tests -->
@@ -77,30 +62,7 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-
-    <!-- JWT Dependencies -->
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-api</artifactId>
-      <version>0.11.5</version>
-    </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-impl</artifactId>
-      <version>0.11.5</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-jackson</artifactId>
-      <version>0.11.5</version>
-      <scope>runtime</scope>
-    </dependency>
-
-
   </dependencies>
-
-
 
   <build>
     <plugins>

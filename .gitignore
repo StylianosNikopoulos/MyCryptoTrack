@@ -35,8 +35,12 @@ src/main/resources/application.properties
 alert-service/application.properties
 api-gateway/application.properties
 auth-service/application.properties
-market-ingest-service/application.properties
+market-ingest-management/application.properties
 .env
 api-gateway/src/main/resources/application.properties
 auth-service/src/main/resources/application.properties
-market-ingest-service/src/main/resources/application.properties
+market-ingest-management/src/main/resources/application.properties
+alert-management/${project.build.directory}/classes/application.properties
+api-gateway/${project.build.directory}/classes/application.properties
+auth-management/src/main/resources/application.properties
+alert-management/src/main/resources/application.properties

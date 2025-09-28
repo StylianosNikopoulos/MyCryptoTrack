@@ -17,9 +17,9 @@
     <spring-cloud.version>2024.0.2</spring-cloud.version>
   </properties>
   <modules>
-    <module>auth-service</module>
-    <module>market-ingest-service</module>
-    <module>alert-service</module>
+    <module>auth-management</module>
+    <module>market-ingest-management</module>
+    <module>alert-management</module>
     <module>api-gateway</module>
   </modules>
   <dependencyManagement>
