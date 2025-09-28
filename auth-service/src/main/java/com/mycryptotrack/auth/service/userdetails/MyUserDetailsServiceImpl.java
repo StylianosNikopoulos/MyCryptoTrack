@@ -1,4 +1,4 @@
-package com.mycryptotrack.auth.service;
+package com.mycryptotrack.auth.service.userdetails;
 
 import com.mycryptotrack.auth.model.User;
 import com.mycryptotrack.auth.repository.UserRepository;
@@ -8,22 +8,22 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MyUserDetailsService implements UserDetailsService {
+public class MyUserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public MyUserDetailsService(UserRepository userRepository) {
+    public MyUserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByUsername(username)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
+                .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .authorities("USER")
+                .authorities(user.getRole())
                 .build();
     }
 }

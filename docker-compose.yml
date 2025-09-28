@@ -4,12 +4,13 @@ services:
   postgres:
     image: postgres:16
     container_name: postgres
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST_AUTH_METHOD: trust
-
     ports:
       - "5431:5432"
     volumes:
@@ -33,6 +34,8 @@ services:
     container_name: kafka
     depends_on:
       - zookeeper
+    env_file:
+      - .env
     ports:
       - "9092:9092"
     environment:
@@ -43,8 +46,6 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     networks:
       - mycryptotrack-net
-
-
 
 volumes:
   postgres_data:

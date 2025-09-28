@@ -26,9 +26,16 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
-    @Column
-    private String role = "USER";
+    @Column(nullable = false)
+    private String role;
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (role == null) role = "USER";
+    }
 }
+
