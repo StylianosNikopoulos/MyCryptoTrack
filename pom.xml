@@ -6,22 +6,26 @@
     <version>3.4.1</version>
     <relativePath/>
   </parent>
+
   <groupId>com.mycryptotrack</groupId>
   <artifactId>mycryptotrack</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>MyCryptoTrack</name>
   <description>Crypto tracking microservices</description>
+
   <properties>
     <java.version>21</java.version>
     <spring-cloud.version>2024.0.2</spring-cloud.version>
   </properties>
+
   <modules>
     <module>auth-management</module>
     <module>market-ingest-management</module>
     <module>alert-management</module>
     <module>api-gateway</module>
   </modules>
+
   <dependencyManagement>
     <dependencies>
       <!-- Spring Cloud BOM -->
@@ -34,6 +38,7 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
   <build>
     <plugins>
       <plugin>
@@ -42,4 +47,5 @@
       </plugin>
     </plugins>
   </build>
+
 </project>

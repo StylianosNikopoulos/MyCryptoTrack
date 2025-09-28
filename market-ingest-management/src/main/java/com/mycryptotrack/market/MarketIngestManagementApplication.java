@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-class MarketIngestServiceApplication {
+class MarketIngestManagementApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MarketIngestServiceApplication.class, args);
+        SpringApplication.run(MarketIngestManagementApplication.class, args);
     }
 }
