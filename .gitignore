@@ -44,3 +44,4 @@ alert-management/${project.build.directory}/classes/application.properties
 api-gateway/${project.build.directory}/classes/application.properties
 auth-management/src/main/resources/application.properties
 alert-management/src/main/resources/application.properties
+alert-management/src/main/resources/application.properties

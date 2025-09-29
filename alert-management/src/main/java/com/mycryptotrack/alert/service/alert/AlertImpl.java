@@ -15,11 +15,12 @@ public class AlertImpl implements AlertService {
     private final AlertRepository repository;
 
     @Override
-    public AlertDataDto createAlert(String symbol, double targetPrice) {
+    public AlertDataDto createAlert(String symbol, double targetPrice, String email) {
         AlertData alert = AlertData.builder()
                 .symbol(symbol)
                 .targetPrice(targetPrice)
                 .triggered(false)
+                .email(email)
                 .build();
 
         AlertData saved = repository.save(alert);
@@ -44,6 +45,7 @@ public class AlertImpl implements AlertService {
                 .symbol(alert.getSymbol())
                 .targetPrice(alert.getTargetPrice())
                 .triggered(alert.isTriggered())
+                .email(alert.getEmail())
                 .build();
     }
 }

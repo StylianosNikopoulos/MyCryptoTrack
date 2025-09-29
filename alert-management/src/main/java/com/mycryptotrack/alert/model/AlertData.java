@@ -29,4 +29,8 @@ public class AlertData {
 
     @Column(nullable = false)
     private Instant fetchedAt;
+
+    @Column(nullable = false)
+    private String email;
+
 }
