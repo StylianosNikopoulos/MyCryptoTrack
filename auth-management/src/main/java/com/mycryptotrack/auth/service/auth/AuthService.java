@@ -1,10 +1,9 @@
 package com.mycryptotrack.auth.service.auth;
 
+import com.mycryptotrack.auth.dto.UserDto;
 import com.mycryptotrack.auth.model.User;
-
-import java.util.Optional;
 
 public interface AuthService {
     User register(User user);
-    Optional<User> findByEmail(String email);
+    String login(UserDto dto);
 }

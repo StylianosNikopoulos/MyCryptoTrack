@@ -30,7 +30,6 @@ public class MarketConsumer {
                             alert.setTriggered(true);
                             repository.save(alert);
 
-                            // Trigger notification
                             notificationService.sendAlert(alert, marketData.getPrice());
                             log.info("✅ Alert triggered for {} at {}", alert.getSymbol(), marketData.getPrice());
                         }

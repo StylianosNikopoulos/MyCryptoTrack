@@ -4,8 +4,11 @@ import com.mycryptotrack.alert.dto.AlertDataDto;
 import com.mycryptotrack.alert.model.AlertData;
 import com.mycryptotrack.alert.repository.AlertRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
-
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,12 +18,18 @@ public class AlertImpl implements AlertService {
     private final AlertRepository repository;
 
     @Override
-    public AlertDataDto createAlert(String symbol, double targetPrice, String email) {
+    public AlertDataDto createAlert(String symbol, double targetPrice, String ignoredEmail) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) auth.getPrincipal();
+
+        String email = jwt.getSubject();
+
         AlertData alert = AlertData.builder()
                 .symbol(symbol)
                 .targetPrice(targetPrice)
                 .triggered(false)
                 .email(email)
+                .fetchedAt(Instant.now())
                 .build();
 
         AlertData saved = repository.save(alert);
