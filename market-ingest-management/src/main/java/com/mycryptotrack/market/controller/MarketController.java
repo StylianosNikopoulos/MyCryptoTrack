@@ -1,7 +1,7 @@
 package com.mycryptotrack.market.controller;
 
 import com.mycryptotrack.common.dto.MarketDataDto;
-import com.mycryptotrack.market.service.market.MarketIngestImpl;
+import com.mycryptotrack.market.service.market.MarketIngestServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MarketController {
 
-    private final MarketIngestImpl service;
+    private final MarketIngestServiceImpl service;
 
     @GetMapping("/latest")
     public ResponseEntity<List<MarketDataDto>> latest() {

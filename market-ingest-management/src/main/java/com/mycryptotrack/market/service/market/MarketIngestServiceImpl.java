@@ -3,7 +3,7 @@ package com.mycryptotrack.market.service.market;
 import com.mycryptotrack.common.dto.MarketDataDto;
 import com.mycryptotrack.market.exception.CustomException;
 import com.mycryptotrack.market.kafka.Producer;
-import com.mycryptotrack.market.service.apiclient.ApiClientImpl;
+import com.mycryptotrack.market.service.apiclient.ApiClientServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,9 @@ import reactor.core.publisher.Flux;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MarketIngestImpl implements MarketIngestService {
+public class MarketIngestServiceImpl implements MarketIngestService {
 
-    private final ApiClientImpl apiClient;
+    private final ApiClientServiceImpl apiClient;
     private final Producer producer;
     private final MarketDataRepository repository;
     private final List<MarketDataDto> latestData = new CopyOnWriteArrayList<>();

@@ -9,11 +9,11 @@ import java.time.Duration;
 import java.util.Map;
 
 @Component
-public class ApiClientImpl implements ApiClientService {
+public class ApiClientServiceImpl implements ApiClientService {
 
     private final WebClient webClient;
 
-    public ApiClientImpl(@Value("${market.api.base-url}") String baseUrl) {
+    public ApiClientServiceImpl(@Value("${market.api.base-url}") String baseUrl) {
         this.webClient = WebClient.builder()
                 .baseUrl(baseUrl)
                 .build();

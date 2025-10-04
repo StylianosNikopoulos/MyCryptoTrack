@@ -14,7 +14,7 @@ public class AlertController {
 
     @PostMapping("/create")
     public AlertDataDto createAlert(@RequestBody AlertDataDto dto) {
-        return service.createAlert(dto.getSymbol(),dto.getTargetPrice(), dto.getEmail());
+        return service.createAlert(dto.getSymbol(), dto.getTargetPrice(), dto.getEmail(), dto.getType());
     }
 
     @GetMapping("allAlerts")

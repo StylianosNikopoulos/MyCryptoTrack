@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class NotificationImpl implements NotificationService {
+public class NotificationServiceImpl implements NotificationService {
 
     private final JavaMailSender mailSender;
 
@@ -25,9 +25,10 @@ public class NotificationImpl implements NotificationService {
             helper.setTo(alert.getEmail());
             helper.setSubject("Crypto Alert - " + alert.getSymbol());
             helper.setText(
-                    String.format("🚨 %s has reached your target price of %.2f! Current price: %.2f",
-                            alert.getSymbol(), alert.getTargetPrice(), currentPrice),
-                    false
+                    "<h2>🚨 Crypto Alert</h2>" +
+                            "<p><b>" + alert.getSymbol() + "</b> has reached your target price of <b>" + alert.getTargetPrice() +
+                            "</b>! Current price: <b>" + currentPrice + "</b></p>",
+                    true
             );
 
             mailSender.send(message);

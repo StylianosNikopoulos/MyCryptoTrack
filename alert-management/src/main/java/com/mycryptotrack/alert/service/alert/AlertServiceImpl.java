@@ -1,6 +1,7 @@
 package com.mycryptotrack.alert.service.alert;
 
 import com.mycryptotrack.alert.dto.AlertDataDto;
+import com.mycryptotrack.alert.enums.AlertType;
 import com.mycryptotrack.alert.model.AlertData;
 import com.mycryptotrack.alert.repository.AlertRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,21 +15,24 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AlertImpl implements AlertService {
+public class AlertServiceImpl implements AlertService {
     private final AlertRepository repository;
 
     @Override
-    public AlertDataDto createAlert(String symbol, double targetPrice, String ignoredEmail) {
+    public AlertDataDto createAlert(String symbol, double targetPrice, String ignoredEmail, AlertType type) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Jwt jwt = (Jwt) auth.getPrincipal();
 
-        String email = jwt.getSubject();
+        String email = jwt.getClaim("email") != null
+                ? jwt.getClaim("email").toString()
+                : jwt.getSubject();
 
         AlertData alert = AlertData.builder()
                 .symbol(symbol)
                 .targetPrice(targetPrice)
                 .triggered(false)
                 .email(email)
+                .type(type)
                 .fetchedAt(Instant.now())
                 .build();
 
@@ -55,6 +59,7 @@ public class AlertImpl implements AlertService {
                 .targetPrice(alert.getTargetPrice())
                 .triggered(alert.isTriggered())
                 .email(alert.getEmail())
+                .type(alert.getType())
                 .build();
     }
 }

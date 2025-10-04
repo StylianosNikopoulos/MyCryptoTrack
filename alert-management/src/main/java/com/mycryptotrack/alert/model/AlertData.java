@@ -1,5 +1,6 @@
 package com.mycryptotrack.alert.model;
 
+import com.mycryptotrack.alert.enums.AlertType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.Instant;
@@ -32,4 +33,6 @@ public class AlertData {
     @Column(nullable = false)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private AlertType type;
 }
