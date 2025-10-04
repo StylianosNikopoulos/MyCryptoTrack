@@ -1,6 +1,6 @@
 package com.mycryptotrack.alert.service.notification;
 
-import com.mycryptotrack.alert.model.AlertData;
+import com.mycryptotrack.alert.entity.AlertData;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

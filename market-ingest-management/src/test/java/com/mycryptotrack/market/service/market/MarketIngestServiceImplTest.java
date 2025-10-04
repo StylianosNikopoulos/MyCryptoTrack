@@ -2,7 +2,7 @@ package com.mycryptotrack.market.service.market;
 
 import com.mycryptotrack.common.dto.MarketDataDto;
 import com.mycryptotrack.market.kafka.Producer;
-import com.mycryptotrack.market.model.MarketData;
+import com.mycryptotrack.market.entity.MarketData;
 import com.mycryptotrack.market.repository.MarketDataRepository;
 import com.mycryptotrack.market.service.apiclient.ApiClientServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

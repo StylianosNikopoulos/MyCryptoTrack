@@ -1,6 +1,6 @@
 package com.mycryptotrack.alert.repository;
 
-import com.mycryptotrack.alert.model.AlertData;
+import com.mycryptotrack.alert.entity.AlertData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

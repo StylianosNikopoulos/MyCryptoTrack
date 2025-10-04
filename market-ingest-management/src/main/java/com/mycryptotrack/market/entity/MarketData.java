@@ -1,4 +1,4 @@
-package com.mycryptotrack.market.model;
+package com.mycryptotrack.market.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

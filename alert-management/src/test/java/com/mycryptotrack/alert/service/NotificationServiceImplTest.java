@@ -1,6 +1,6 @@
 package com.mycryptotrack.alert.service;
 
-import com.mycryptotrack.alert.model.AlertData;
+import com.mycryptotrack.alert.entity.AlertData;
 import com.mycryptotrack.alert.service.notification.NotificationServiceImpl;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;

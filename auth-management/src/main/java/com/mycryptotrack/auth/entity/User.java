@@ -1,4 +1,4 @@
-package com.mycryptotrack.auth.model;
+package com.mycryptotrack.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

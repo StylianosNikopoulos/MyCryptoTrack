@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import com.mycryptotrack.market.model.MarketData ;
+import com.mycryptotrack.market.entity.MarketData ;
 import com.mycryptotrack.market.repository.MarketDataRepository;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;

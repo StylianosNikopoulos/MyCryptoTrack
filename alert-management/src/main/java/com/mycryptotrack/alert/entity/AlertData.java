@@ -1,4 +1,4 @@
-package com.mycryptotrack.alert.model;
+package com.mycryptotrack.alert.entity;
 
 import com.mycryptotrack.alert.enums.AlertType;
 import jakarta.persistence.*;

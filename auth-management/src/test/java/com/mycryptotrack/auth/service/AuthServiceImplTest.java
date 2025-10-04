@@ -2,7 +2,7 @@ package com.mycryptotrack.auth.service;
 
 import com.mycryptotrack.auth.dto.UserDto;
 import com.mycryptotrack.auth.exception.CustomException;
-import com.mycryptotrack.auth.model.User;
+import com.mycryptotrack.auth.entity.User;
 import com.mycryptotrack.auth.repository.UserRepository;
 import com.mycryptotrack.auth.security.JwtUtil;
 import com.mycryptotrack.auth.service.auth.AuthServiceImpl;

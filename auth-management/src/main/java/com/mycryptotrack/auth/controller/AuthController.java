@@ -1,7 +1,7 @@
 package com.mycryptotrack.auth.controller;
 
 import com.mycryptotrack.auth.dto.UserDto;
-import com.mycryptotrack.auth.model.User;
+import com.mycryptotrack.auth.entity.User;
 import com.mycryptotrack.auth.service.auth.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

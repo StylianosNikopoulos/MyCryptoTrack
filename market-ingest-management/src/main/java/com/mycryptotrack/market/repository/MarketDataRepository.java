@@ -1,6 +1,6 @@
 package com.mycryptotrack.market.repository;
 
-import com.mycryptotrack.market.model.MarketData;
+import com.mycryptotrack.market.entity.MarketData;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

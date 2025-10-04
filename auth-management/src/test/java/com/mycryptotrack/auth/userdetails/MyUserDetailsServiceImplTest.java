@@ -1,6 +1,6 @@
 package com.mycryptotrack.auth.userdetails;
 
-import com.mycryptotrack.auth.model.User;
+import com.mycryptotrack.auth.entity.User;
 import com.mycryptotrack.auth.repository.UserRepository;
 import com.mycryptotrack.auth.service.userdetails.MyUserDetailsServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,6 +1,6 @@
 package com.mycryptotrack.auth.service.userdetails;
 
-import com.mycryptotrack.auth.model.User;
+import com.mycryptotrack.auth.entity.User;
 import com.mycryptotrack.auth.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -2,7 +2,7 @@ package com.mycryptotrack.alert.service;
 
 import com.mycryptotrack.alert.dto.AlertDataDto;
 import com.mycryptotrack.alert.enums.AlertType;
-import com.mycryptotrack.alert.model.AlertData;
+import com.mycryptotrack.alert.entity.AlertData;
 import com.mycryptotrack.alert.repository.AlertRepository;
 import com.mycryptotrack.alert.service.alert.AlertServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

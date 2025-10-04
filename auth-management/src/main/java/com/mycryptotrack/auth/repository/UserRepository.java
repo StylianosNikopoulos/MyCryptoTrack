@@ -1,6 +1,6 @@
 package com.mycryptotrack.auth.repository;
 
-import com.mycryptotrack.auth.model.User;
+import com.mycryptotrack.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
