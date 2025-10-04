@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface MarketIngestService {
     List<MarketDataDto> fetchOnceAndReturn();
-    List<MarketDataDto> getLatestData();
+    List<MarketDataDto> getLatestDataFromDB();
 }

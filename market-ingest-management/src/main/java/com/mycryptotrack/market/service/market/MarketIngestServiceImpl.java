@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -28,37 +29,45 @@ public class MarketIngestServiceImpl implements MarketIngestService {
 
     @Scheduled(fixedRateString = "${market.fetch.interval}")
     public void scheduledFetch() {
-        fetchAllSymbolsAsync();
+        fetchOnceAndReturn();
     }
 
+    //Fetch
     public List<MarketDataDto> fetchOnceAndReturn() {
-        fetchAllSymbolsAsync();
-        return List.copyOf(latestData);
+            Flux<Map<String, Object>> allPrices = apiClient.getAllPrices();
+
+            allPrices
+                    .map(this::mapToEntityAndDto)
+                    .collectList()
+                    .doOnNext(entities -> {
+                        entities.forEach(entity -> {
+                            repository.findBySymbol(entity.getSymbol())
+                                    .ifPresentOrElse(existing -> {
+                                        existing.setPrice(entity.getPrice());
+                                        existing.setFetchedAt(entity.getFetchedAt());
+                                        repository.save(existing);
+                                    }, () -> repository.save(entity));
+                        });
+                        log.info("Saved/updated {} market entries to DB", entities.size());
+                    })
+                    .doOnError(ex -> log.error("Error fetching Binance data", ex))
+                    .subscribe();
+
+        return new ArrayList<>(latestData);
     }
 
-    public List<MarketDataDto> getLatestData() {
-        return List.copyOf(latestData);
-    }
-
-    private void fetchAllSymbolsAsync() {
-        Flux<Map<String, Object>> allPrices = apiClient.getAllPrices();
-
-        allPrices
-                .map(this::mapToEntityAndDto)
-                .collectList()
-                .doOnNext(entities -> {
-                    entities.forEach(entity -> {
-                        repository.findBySymbol(entity.getSymbol())
-                                .ifPresentOrElse(existing -> {
-                                    existing.setPrice(entity.getPrice());
-                                    existing.setFetchedAt(entity.getFetchedAt());
-                                    repository.save(existing);
-                                }, () -> repository.save(entity));
-                    });
-                    log.info("Saved/updated {} market entries to DB", entities.size());
-                })
-                .doOnError(ex -> log.error("Error fetching Binance data", ex))
-                .subscribe();
+    // Fetch latest data from DB
+    public List<MarketDataDto> getLatestDataFromDB() {
+        List<MarketData> allData = repository.findAll();
+        List<MarketDataDto> dtos = new ArrayList<>();
+        for (MarketData md : allData) {
+            dtos.add(MarketDataDto.builder()
+                    .symbol(md.getSymbol())
+                    .price(md.getPrice())
+                    .fetchedAt(md.getFetchedAt())
+                    .build());
+        }
+        return dtos;
     }
 
     private MarketData mapToEntityAndDto(Map<String, Object> data) {

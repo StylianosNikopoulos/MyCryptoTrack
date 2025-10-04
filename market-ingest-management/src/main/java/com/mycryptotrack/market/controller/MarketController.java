@@ -17,7 +17,7 @@ public class MarketController {
 
     @GetMapping("/latest")
     public ResponseEntity<List<MarketDataDto>> latest() {
-        return ResponseEntity.ok(service.getLatestData());
+        return ResponseEntity.ok(service.getLatestDataFromDB());
     }
 
     @GetMapping("/fetch")

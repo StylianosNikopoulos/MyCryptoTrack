@@ -2,7 +2,7 @@ package com.mycryptotrack.auth.controller;
 
 import com.mycryptotrack.auth.dto.UserDto;
 import com.mycryptotrack.auth.model.User;
-import com.mycryptotrack.auth.service.auth.AuthIServiceImpl;
+import com.mycryptotrack.auth.service.auth.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 class AuthController {
 
-    private final AuthIServiceImpl authService;
+    private final AuthServiceImpl authService;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDto dto) {
