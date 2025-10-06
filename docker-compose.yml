@@ -55,7 +55,7 @@ services:
     image: openjdk:21
     container_name: auth-management
     volumes:
-      - ./auth-management/target:/app
+      - ./backend/auth-management/target:/app
     env_file:
       - .env
     working_dir: /app
@@ -75,7 +75,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./market-ingest-management/target:/app
+      - ./backend/market-ingest-management/target:/app
     working_dir: /app
     command: java -jar market-ingest-management-0.0.1-SNAPSHOT.jar
     ports:
@@ -93,7 +93,7 @@ services:
       - .env
     container_name: alert-management
     volumes:
-      - ./alert-management/target:/app
+      - ./backend/alert-management/target:/app
     working_dir: /app
     command: java -jar alert-management-0.0.1-SNAPSHOT.jar
     ports:
@@ -109,7 +109,7 @@ services:
     image: openjdk:21
     container_name: api-gateway
     volumes:
-      - ./api-gateway/target:/app
+      - ./backend/api-gateway/target:/app
     working_dir: /app
     command: java -jar api-gateway-0.0.1-SNAPSHOT.jar
     ports:
