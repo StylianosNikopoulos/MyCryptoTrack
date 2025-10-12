@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycryptotrack.common.dto.MarketDataDto;
 import com.mycryptotrack.market.entity.MarketData;
 import com.mycryptotrack.market.repository.MarketDataRepository;
+import com.mycryptotrack.market.service.marketstream.MarketStreamService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class Consumer {
     private final ObjectMapper mapper;
     private final MarketDataRepository repository;
+    private final MarketStreamService marketStreamService;
 
     @KafkaListener(topics = "${market.kafka.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void listen(String message) {
@@ -27,6 +29,8 @@ public class Consumer {
                             .fetchedAt(dto.getFetchedAt())
                             .build()
             );
+            marketStreamService.publish(dto);
+
             log.info("Saved market data: {} - {}", dto.getSymbol(), dto.getPrice());
         } catch (Exception e) {
             log.error("Error consuming message: {}", message, e);

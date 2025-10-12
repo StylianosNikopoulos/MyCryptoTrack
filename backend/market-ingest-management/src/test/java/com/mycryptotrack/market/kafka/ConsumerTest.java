@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycryptotrack.common.dto.MarketDataDto;
 import com.mycryptotrack.market.entity.MarketData;
 import com.mycryptotrack.market.repository.MarketDataRepository;
+import com.mycryptotrack.market.service.marketstream.MarketStreamService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -20,12 +21,16 @@ class ConsumerTest {
     @Mock
     private MarketDataRepository repository;
 
+    @Mock
+    private MarketStreamService marketStreamService;
+
     private Consumer consumer;
+
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        consumer = new Consumer(mapper, repository);
+        consumer = new Consumer(mapper, repository, marketStreamService);
     }
 
     @Test
@@ -38,6 +43,8 @@ class ConsumerTest {
         consumer.listen(message);
 
         verify(repository, times(1)).save(any(MarketData.class));
+
+        verify(marketStreamService, times(1)).publish(dto);
     }
 
     @Test
@@ -49,5 +56,7 @@ class ConsumerTest {
         consumer.listen(invalidMessage);
 
         verify(repository, never()).save(any());
+
+        verify(marketStreamService, never()).publish(any());
     }
 }
