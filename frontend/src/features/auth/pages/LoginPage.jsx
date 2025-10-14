@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../../app/store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/LoginForm.jsx";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -12,23 +13,32 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const validateInputs = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
+    if (!emailRegex.test(email)) { toast.error("Enter valid email"); return false; }
+    if (password.length < 4) { toast.error("Password min 4 chars"); return false; }
+    return true;
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!validateInputs()) return;
     setLoading(true);
     try {
       const token = await login(email, password);
       localStorage.setItem("token", token);
       dispatch(setUser({ email, token }));
+      toast.success("🎉 Logged in!");
       navigate("/");
     } catch (err) {
-      alert(`❌ Login failed`);
+      toast.error(err.message || "❌ Login failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 to-black">
+    <div className="bg-primary-gradient">
       <LoginForm
         title="Welcome Back 👋"
         fields={[
@@ -38,14 +48,7 @@ const LoginPage = () => {
         buttonText="Sign In"
         loading={loading}
         onSubmit={handleLogin}
-        footer={
-          <>
-            Don’t have an account?{" "}
-            <a href="/register" className="text-indigo-400 hover:underline">
-              Sign up
-            </a>
-          </>
-        }
+        footer={<span>Don’t have an account? <a href="/register">Sign up</a></span>}
       />
     </div>
   );

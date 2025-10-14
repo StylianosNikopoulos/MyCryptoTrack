@@ -1,51 +1,31 @@
 import React from "react";
-import { motion } from "framer-motion";
-import Input from "../../../shared/components/Input.jsx";
-import Button from "../../../shared/components/Button.jsx";
 
-const LoginForm = ({
-  title,
-  fields,
-  buttonText,
-  onSubmit,
-  loading,
-  footer,
-}) => {
+const LoginForm = ({ title, fields, buttonText, loading, onSubmit, footer }) => {
   return (
-    <motion.form
-      onSubmit={onSubmit}
-      className="bg-gray-900 text-white p-8 rounded-2xl shadow-2xl flex flex-col gap-6 w-full max-w-md mx-auto"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-      <h2 className="text-3xl font-bold text-center text-indigo-400">
+    <form className="form-card animate-fadeInUp" onSubmit={onSubmit}>
+      <h2 style={{ textAlign: "center", color: "#f9fafb", fontSize: "2rem", fontWeight: "700" }}>
         {title}
       </h2>
 
-      {fields.map((field, i) => (
-        <div key={i}>
-          <Input
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        {fields.map((field, idx) => (
+          <input
+            key={idx}
             type={field.type || "text"}
+            placeholder={field.placeholder}
             value={field.value}
             onChange={field.onChange}
-            placeholder={field.placeholder}
+            className="input-field"
           />
-        </div>
-      ))}
+        ))}
+      </div>
 
-      <Button
-        type="submit"
-        disabled={loading}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl py-2 transition"
-      >
-        {loading ? "Processing..." : buttonText}
-      </Button>
+      <button type="submit" className="btn-primary" disabled={loading}>
+        {loading ? "Loading..." : buttonText}
+      </button>
 
-      {footer && (
-        <p className="text-sm text-gray-400 text-center mt-2">{footer}</p>
-      )}
-    </motion.form>
+      <div className="form-footer">{footer}</div>
+    </form>
   );
 };
 

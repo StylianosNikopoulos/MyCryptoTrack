@@ -76,29 +76,27 @@ const MarketOverviewPage = () => {
   }, []);
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Market Overview</h1>
-        <div className="flex items-center gap-3">
-          {lastUpdated && (
-            <span className="text-sm text-gray-500">
-              Updated at {lastUpdated.toLocaleTimeString()}
-            </span>
-          )}
-          <button
-            onClick={refreshLiveData}
-            disabled={refreshing}
-            className={`px-3 py-1 rounded ${
-              refreshing ? "bg-gray-300" : "bg-blue-600 text-white"
-            }`}
-          >
+    <div className="market-page">
+      <div className="market-header">
+        <h1>Market Overview</h1>
+        <div className="controls">
+          {lastUpdated && <span>Updated at {lastUpdated.toLocaleTimeString()}</span>}
+          <button onClick={refreshLiveData} disabled={refreshing}>
             {refreshing ? "Refreshing..." : "Refresh"}
           </button>
         </div>
       </div>
-      {error ? <p className="text-red-500">{error}</p> : <MarketTable data={coins} />}
+
+      {error ? (
+        <p style={{ color: "#f87171" }}>{error}</p>
+      ) : (
+        <div className="market-card">
+          <MarketTable data={coins} />
+        </div>
+      )}
     </div>
   );
 };
+
 
 export default MarketOverviewPage;

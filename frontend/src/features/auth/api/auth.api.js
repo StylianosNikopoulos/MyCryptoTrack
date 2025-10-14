@@ -10,7 +10,6 @@ export const login = async (email, password) => {
   });
 
   if (!response.ok) {
-    // const errorText = await response.text();
     throw new Error(`Login failed`);
   }
 
@@ -25,9 +24,9 @@ export const register = async ({ username, email, password }) => {
   });
 
   if (!response.ok) {
-    // const errorText = await response.text();
     throw new Error(`Register failed`);
   }
 
   return await response.text();
 };
+
