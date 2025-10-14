@@ -1,27 +1,83 @@
-import React from "react";
+import React, { useState } from "react";
 
-const MarketTable = ({ data }) => {
+const MarketTable = ({ data, rowsPerPage = 20 }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const filteredData = data.filter(
-    (coin) => coin.price && coin.price > 0.001 && coin.symbol && coin.symbol.endsWith("USD")
+    (coin) =>
+      coin.price &&
+      coin.price > 0.001 &&
+      coin.symbol &&
+      coin.symbol.endsWith("USD")
   );
 
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const currentData = filteredData.slice(startIndex, startIndex + rowsPerPage);
+
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+  };
+
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Symbol</th>
-          <th style={{ textAlign: "right" }}>Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        {filteredData.map((coin) => (
-          <tr key={coin.id || coin.symbol}>
-            <td>{coin.symbol}</td>
-            <td style={{ textAlign: "right" }}>{coin.price.toFixed(2)}</td>
+    <div className="market-table-wrapper">
+      <table className="market-table">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Price (USD)</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {currentData.map((coin) => (
+            <tr key={coin.id || coin.symbol}>
+              <td>{coin.symbol}</td>
+              <td>${coin.price.toFixed(2)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+
+          {/* First page */}
+          {currentPage > 2 && (
+            <>
+              <button onClick={() => goToPage(1)}>1</button>
+              {currentPage > 3 && <span className="dots">...</span>}
+            </>
+          )}
+
+          {/* Current page */}
+          <button className="active">{currentPage}</button>
+
+          {/* Last page */}
+          {currentPage < totalPages - 1 && (
+            <>
+              {currentPage < totalPages - 2 && (
+                <span className="dots">...</span>
+              )}
+              <button onClick={() => goToPage(totalPages)}>{totalPages}</button>
+            </>
+          )}
+
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 
