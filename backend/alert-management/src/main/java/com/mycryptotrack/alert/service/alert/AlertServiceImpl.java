@@ -40,18 +40,38 @@ public class AlertServiceImpl implements AlertService {
         return mapToDto(saved);
     }
 
+
     @Override
     public List<AlertDataDto> getAllAlerts() {
-        return repository.findAll()
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) auth.getPrincipal();
+
+        String email = jwt.getClaim("email") != null
+                ? jwt.getClaim("email").toString()
+                : jwt.getSubject();
+
+        return repository.findByEmail(email)
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public void deleteAlert(Long id) {
-        repository.deleteById(id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) auth.getPrincipal();
+
+        String email = jwt.getClaim("email") != null
+                ? jwt.getClaim("email").toString()
+                : jwt.getSubject();
+
+        AlertData alert = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Alert not found"));
+
+        repository.delete(alert);
     }
+
 
     private AlertDataDto mapToDto(AlertData alert) {
         return AlertDataDto.builder()

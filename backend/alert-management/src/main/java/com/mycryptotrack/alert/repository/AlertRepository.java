@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface AlertRepository extends JpaRepository<AlertData, Long> {
     List<AlertData> findBySymbolAndTriggeredFalse(String symbol);
+    List<AlertData> findByEmail(String email);
 }

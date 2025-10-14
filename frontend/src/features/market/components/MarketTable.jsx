@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MarketTable = ({ data, rowsPerPage = 20 }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate(); 
 
   const filteredData = data.filter(
     (coin) =>
@@ -27,6 +29,7 @@ const MarketTable = ({ data, rowsPerPage = 20 }) => {
           <tr>
             <th>Symbol</th>
             <th>Price (USD)</th>
+            <th>Alert</th>
           </tr>
         </thead>
         <tbody>
@@ -34,6 +37,16 @@ const MarketTable = ({ data, rowsPerPage = 20 }) => {
             <tr key={coin.id || coin.symbol}>
               <td>{coin.symbol}</td>
               <td>${coin.price.toFixed(2)}</td>
+              <td>
+                <button
+                  className="btn-primary"
+                  onClick={() =>
+                    navigate("/alerts/create", { state: { symbol: coin.symbol, price: coin.price } })
+                  }
+                >
+                  Create Alert
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -48,7 +61,6 @@ const MarketTable = ({ data, rowsPerPage = 20 }) => {
             Prev
           </button>
 
-          {/* First page */}
           {currentPage > 2 && (
             <>
               <button onClick={() => goToPage(1)}>1</button>
@@ -56,15 +68,11 @@ const MarketTable = ({ data, rowsPerPage = 20 }) => {
             </>
           )}
 
-          {/* Current page */}
           <button className="active">{currentPage}</button>
 
-          {/* Last page */}
           {currentPage < totalPages - 1 && (
             <>
-              {currentPage < totalPages - 2 && (
-                <span className="dots">...</span>
-              )}
+              {currentPage < totalPages - 2 && <span className="dots">...</span>}
               <button onClick={() => goToPage(totalPages)}>{totalPages}</button>
             </>
           )}

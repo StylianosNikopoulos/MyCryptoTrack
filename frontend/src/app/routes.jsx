@@ -4,11 +4,12 @@ import { useSelector } from "react-redux";
 import LoginPage from "../features/auth/pages/LoginPage.jsx";
 import RegisterPage from "../features/auth/pages/RegisterPage.jsx";
 import MarketOverviewPage from "../features/market/pages/MarketOverviewPage.jsx";
-import AlertPage from "../features/alerts/pages/AlertPage.jsx";
+import AlertsPage from "../features/alerts/pages/AlertsPage.jsx";
+import AlertFormPage from "../features/alerts/pages/AlertFormPage.jsx";
 
 const RoutesConfig = () => {
   const user = useSelector((state) => state.user);
-  const isAuthenticated = !!user?.token; 
+  const isAuthenticated = !!user?.token;
 
   return (
     <Routes>
@@ -18,10 +19,15 @@ const RoutesConfig = () => {
 
       <Route
         path="/alerts"
-        element={
-          isAuthenticated ? <AlertPage /> : <Navigate to="/login" replace />
-        }
+        element={isAuthenticated ? <AlertsPage /> : <Navigate to="/login" replace />}
       />
+
+      <Route
+        path="/alerts/create"
+        element={isAuthenticated ? <AlertFormPage /> : <Navigate to="/login" replace />}
+      />
+
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

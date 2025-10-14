@@ -100,17 +100,19 @@ class AlertServiceImplTest {
     }
 
     @Test
-    void getAllAlerts_ShouldReturnMappedDTOS(){
+    void getAllAlerts_ShouldReturnMappedDTOS() {
         // arrange
         AlertData alert1 = AlertData.builder()
                 .id(1L).symbol("BTCUSDT").targetPrice(30000.0)
-                .triggered(false).email("a@test.com").fetchedAt(Instant.now()).build();
+                .triggered(false).email("test@email.com").fetchedAt(Instant.now()).build();
 
         AlertData alert2 = AlertData.builder()
                 .id(2L).symbol("ETHUSDT").targetPrice(2000.0)
-                .triggered(true).email("b@test.com").fetchedAt(Instant.now()).build();
+                .triggered(true).email("test@email.com").fetchedAt(Instant.now()).build();
 
-        when(repository.findAll()).thenReturn(List.of(alert1, alert2));
+        // Mock repository to return only alerts for the current JWT email
+        when(repository.findByEmail("test@email.com"))
+                .thenReturn(List.of(alert1, alert2));
 
         // act
         List<AlertDataDto> results = service.getAllAlerts();
@@ -120,23 +122,40 @@ class AlertServiceImplTest {
 
         assertThat(results.get(0).getSymbol()).isEqualTo("BTCUSDT");
         assertThat(results.get(0).getTargetPrice()).isEqualTo(30000.0);
-        assertThat(results.get(0).getEmail()).isEqualTo("a@test.com");
+        assertThat(results.get(0).getEmail()).isEqualTo("test@email.com");
         assertThat(results.get(0).isTriggered()).isFalse();
 
         assertThat(results.get(1).getSymbol()).isEqualTo("ETHUSDT");
         assertThat(results.get(1).getTargetPrice()).isEqualTo(2000.0);
-        assertThat(results.get(1).getEmail()).isEqualTo("b@test.com");
+        assertThat(results.get(1).getEmail()).isEqualTo("test@email.com");
         assertThat(results.get(1).isTriggered()).isTrue();
 
-        verify(repository, times(1)).findAll();
+        verify(repository, times(1)).findByEmail("test@email.com");
     }
 
     @Test
-    void deleteAlert_ShouldCallRepositoryDelete(){
+    void deleteAlert_ShouldCallRepositoryDelete() {
         Long id = 23L;
+
+        // Mock an alert owned by the current JWT user
+        AlertData alert = AlertData.builder()
+                .id(id)
+                .symbol("BTCUSDT")
+                .targetPrice(30000.0)
+                .email("test@email.com") // must match JWT
+                .triggered(false)
+                .build();
+
+        // Make repository.findById return the alert
+        when(repository.findById(id)).thenReturn(java.util.Optional.of(alert));
+
+        // Call the service
         service.deleteAlert(id);
-        verify(repository,times(1)).deleteById(id);
+
+        // Verify delete was called
+        verify(repository, times(1)).delete(alert);
     }
+
 }
 
 
