@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const MarketTable = ({ data, rowsPerPage = 20 }) => {
+const MarketTable = ({ data, rowsPerPage = 10 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate(); 
 
