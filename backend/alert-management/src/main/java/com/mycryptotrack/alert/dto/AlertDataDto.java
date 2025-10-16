@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class AlertDataDto {
+    private Long id;
     private String symbol;
     private double targetPrice;
     private boolean triggered;

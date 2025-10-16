@@ -60,7 +60,10 @@ public class AlertServiceImpl implements AlertService {
     @Override
     public void deleteAlert(Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Jwt jwt = (Jwt) auth.getPrincipal();
+
+        if (!(auth.getPrincipal() instanceof Jwt jwt)) {
+            throw new RuntimeException("Invalid authentication token");
+        }
 
         String email = jwt.getClaim("email") != null
                 ? jwt.getClaim("email").toString()
@@ -69,12 +72,17 @@ public class AlertServiceImpl implements AlertService {
         AlertData alert = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Alert not found"));
 
+        if (!alert.getEmail().equalsIgnoreCase(email)) {
+            throw new RuntimeException("You are not authorized to delete this alert");
+        }
+
         repository.delete(alert);
     }
 
 
     private AlertDataDto mapToDto(AlertData alert) {
         return AlertDataDto.builder()
+                .id(alert.getId())
                 .symbol(alert.getSymbol())
                 .targetPrice(alert.getTargetPrice())
                 .triggered(alert.isTriggered())
