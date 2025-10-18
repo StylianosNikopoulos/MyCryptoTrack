@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { createAlert } from "../api/alert.api";
+import { createAlert, updateAlert } from "../api/alert.api";
 
 const AlertFormPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { symbol } = location.state || {};
+  const { alert: existingAlert, symbol: locationSymbol } = location.state || {};
 
-  const [targetPrice, setTargetPrice] = useState("");
-  const [type, setType] = useState("SELL");
+  const isEditing = Boolean(existingAlert);
+
+  const [symbol, setSymbol] = useState(
+    isEditing ? existingAlert.symbol : locationSymbol || ""
+  );
+  const [targetPrice, setTargetPrice] = useState(
+    isEditing ? existingAlert.targetPrice : ""
+  );
+  const [type, setType] = useState(isEditing ? existingAlert.type : "SELL");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -18,16 +25,27 @@ const AlertFormPage = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
+
     try {
-      await createAlert({
-        symbol,
-        targetPrice: parseFloat(targetPrice),
-        type,
-      });
+      if (isEditing) {
+        // Update existing alert
+        await updateAlert(existingAlert.id, {
+          symbol,
+          targetPrice: parseFloat(targetPrice),
+          type,
+        });
+      } else {
+        // Create new alert
+        await createAlert({
+          symbol,
+          targetPrice: parseFloat(targetPrice),
+          type,
+        });
+      }
       navigate("/alerts");
     } catch (err) {
       console.error(err);
-      setError("Failed to create alert.");
+      setError(isEditing ? "Failed to update alert." : "Failed to create alert.");
     } finally {
       setLoading(false);
     }
@@ -36,7 +54,9 @@ const AlertFormPage = () => {
   return (
     <div className="alert-form-page">
       <form className="alert-form-page__card" onSubmit={handleSubmit}>
-        <h2 className="alert-form-page__title">Create Alert for {symbol}</h2>
+        <h2 className="alert-form-page__title">
+          {isEditing ? `Update Alert for ${symbol}` : `Create Alert for ${symbol}`}
+        </h2>
 
         <label className="alert-form-page__label">
           Alert Type:
@@ -69,7 +89,7 @@ const AlertFormPage = () => {
           type="submit"
           disabled={loading}
         >
-          {loading ? "Saving..." : "Save Alert"}
+          {loading ? "Saving..." : isEditing ? "Update Alert" : "Save Alert"}
         </button>
       </form>
     </div>

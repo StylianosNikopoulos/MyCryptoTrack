@@ -27,6 +27,11 @@ const RoutesConfig = () => {
         element={isAuthenticated ? <AlertFormPage /> : <Navigate to="/login" replace />}
       />
 
+      <Route
+        path="/alerts/update"
+        element={isAuthenticated ? <AlertFormPage /> : <Navigate to="/login" replace />}
+      />
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

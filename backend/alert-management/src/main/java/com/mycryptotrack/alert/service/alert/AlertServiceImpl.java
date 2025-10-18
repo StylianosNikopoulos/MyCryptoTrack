@@ -42,6 +42,29 @@ public class AlertServiceImpl implements AlertService {
 
 
     @Override
+    public AlertDataDto updateAlert(Long id, String symbol, double targetPrice, String ignoredEmail, AlertType type) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) auth.getPrincipal();
+
+        String email = jwt.getClaim("email") != null
+                ? jwt.getClaim("email").toString()
+                : jwt.getSubject();
+
+        AlertData alert = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Alert not found"));
+
+        alert.setSymbol(symbol != null ? symbol.toUpperCase() : alert.getSymbol());
+        alert.setTargetPrice(targetPrice);
+        alert.setType(type);
+        alert.setTriggered(false);
+        alert.setFetchedAt(Instant.now());
+
+        AlertData updated = repository.save(alert);
+        return  mapToDto(updated);
+    }
+
+
+    @Override
     public List<AlertDataDto> getAllAlerts() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Jwt jwt = (Jwt) auth.getPrincipal();

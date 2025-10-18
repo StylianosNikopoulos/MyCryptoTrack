@@ -79,6 +79,22 @@
   transform: translateY(-1px);
 }
 
+.alerts-page__btn-update {
+  background: linear-gradient(135deg, #ff8f0e, #ff8e0c);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.alerts-page__btn-update:hover {
+  background: linear-gradient(135deg, #e77b00, #e27900);
+  transform: translateY(-1px);
+}
+
 .alert-form-page {
   min-height: 100vh;
   display: flex;

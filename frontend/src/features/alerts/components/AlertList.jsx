@@ -1,6 +1,6 @@
 import React from "react";
 
-const AlertList = ({ alerts, onDelete }) => {
+const AlertList = ({ alerts, onDelete, onUpdate }) => {
   if (!alerts || alerts.length === 0) return <p>No alerts yet.</p>;
 
   return (
@@ -11,7 +11,8 @@ const AlertList = ({ alerts, onDelete }) => {
           <th className="alerts-page__th">Current Price</th>
           <th className="alerts-page__th">Target Price</th>
           <th className="alerts-page__th">Type</th>
-          <th className="alerts-page__th">Action</th>
+          <th className="alerts-page__th">Update Alert</th>
+          <th className="alerts-page__th">Delete Alert</th>
         </tr>
       </thead>
       <tbody>
@@ -21,6 +22,14 @@ const AlertList = ({ alerts, onDelete }) => {
             <td className="alerts-page__td">{a.p}</td>
             <td className="alerts-page__td">${a.targetPrice}</td>
             <td className="alerts-page__td">{a.type}</td>
+            <td className="alerts-page__td">
+              <button
+                className="alerts-page__btn-update"
+                onClick={() => onUpdate(a)}
+              >
+                Update
+              </button>
+            </td>
             <td className="alerts-page__td">
               <button
                 className="alerts-page__btn-delete"

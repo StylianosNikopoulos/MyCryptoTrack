@@ -22,6 +22,11 @@ public class AlertController {
         return service.getAllAlerts();
     }
 
+    @PutMapping("/update/{id}")
+    public AlertDataDto updateAlert(@PathVariable Long id, @RequestBody AlertDataDto dto){
+        return service.updateAlert(id,dto.getSymbol(), dto.getTargetPrice(), dto.getEmail(), dto.getType());
+    }
+
     @DeleteMapping("/{id}")
     public void deleteAlert(@PathVariable Long id) {
         service.deleteAlert(id);

@@ -10,7 +10,7 @@ import "./styles/animations.css";
 import "./styles/market.css";
 import "./styles/footer.css";
 import "./styles/alert.css";
-
+import "./styles/ConfirmModal.css"; 
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
