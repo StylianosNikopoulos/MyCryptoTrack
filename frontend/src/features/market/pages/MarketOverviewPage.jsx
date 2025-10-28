@@ -5,10 +5,10 @@ import MarketTable from "../components/MarketTable";
 const MarketOverviewPage = () => {
   const [coins, setCoins] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
 
- // 1: Load cached data (from DB)
+  // Load cached data
   const loadCachedData = useCallback(async () => {
     try {
       const data = await latestCoins();
@@ -20,21 +20,18 @@ const MarketOverviewPage = () => {
     }
   }, []);
 
-   // 2: Fetch live data (from Bin)
+  // Fetch live data
   const refreshLiveData = useCallback(async () => {
     try {
-      setRefreshing(true);
       const freshData = await fetchCoins();
       setCoins(freshData);
       setLastUpdated(new Date());
     } catch (err) {
       console.warn("Live refresh failed:", err);
-    } finally {
-      setRefreshing(false);
     }
   }, []);
 
-  // 3: Load once, then refresh every minute
+  // Initial load + interval
   useEffect(() => {
     let isMounted = true;
     (async () => {
@@ -52,7 +49,7 @@ const MarketOverviewPage = () => {
     };
   }, [loadCachedData, refreshLiveData]);
 
-  // SSE: real-time updates with auto-reconnect
+  // SSE for real-time updates
   useEffect(() => {
     const source = new EventSource(streamUrl);
 
@@ -63,7 +60,7 @@ const MarketOverviewPage = () => {
         const index = updated.findIndex((c) => c.symbol === data.symbol);
         if (index >= 0) updated[index] = data;
         else updated.push(data);
-        return [...updated];
+        return updated;
       });
     };
 
@@ -75,28 +72,35 @@ const MarketOverviewPage = () => {
     return () => source.close();
   }, []);
 
+  const filteredCoins = coins.filter(
+    (coin) =>
+      !searchTerm ||
+      coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="market-page">
       <div className="market-header">
         <h1>Market Overview</h1>
-        <div className="controls">
-          {lastUpdated && <span>Updated at {lastUpdated.toLocaleTimeString()}</span>}
-          <button onClick={refreshLiveData} disabled={refreshing}>
-            {refreshing ? "Refreshing..." : "Refresh"}
-          </button>
-        </div>
+        {/* Search Bar */}
+        <input
+          type="text"
+          placeholder="Search coin by symbol..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="market-search"
+        />
       </div>
 
       {error ? (
         <p style={{ color: "#f87171" }}>{error}</p>
       ) : (
         <div className="market-card">
-          <MarketTable data={coins} />
+          <MarketTable data={filteredCoins} />
         </div>
       )}
     </div>
   );
 };
-
 
 export default MarketOverviewPage;

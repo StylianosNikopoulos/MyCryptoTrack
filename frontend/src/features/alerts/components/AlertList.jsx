@@ -19,7 +19,9 @@ const AlertList = ({ alerts, onDelete, onUpdate }) => {
         {alerts.map((a) => (
           <tr className="alerts-page__tr" key={a.id}>
             <td className="alerts-page__td">{a.symbol}</td>
-            <td className="alerts-page__td">{a.p}</td>
+            <td className="alerts-page__td">
+              {a.currentPrice !== "N/A" ? `$${parseFloat(a.currentPrice).toFixed(2)}` : "N/A"}
+            </td>
             <td className="alerts-page__td">${a.targetPrice}</td>
             <td className="alerts-page__td">{a.type}</td>
             <td className="alerts-page__td">

@@ -205,3 +205,112 @@
     padding: 0.6rem 0.75rem;
   }
 }
+
+.price-up {
+  animation: flashGreen 0.4s ease;
+}
+.price-down {
+  animation: flashRed 0.4s ease;
+}
+
+@keyframes flashGreen {
+  from { background-color: rgba(16, 185, 129, 0.2); }
+  to { background-color: transparent; }
+}
+
+@keyframes flashRed {
+  from { background-color: rgba(239, 68, 68, 0.2); }
+  to { background-color: transparent; }
+}
+
+/* Persistent colors for price text */
+.price-up {
+  color: #10b981 !important; 
+  font-weight: 600;
+}
+
+.price-down {
+  color: #ef4444 !important;
+  font-weight: 600;
+}
+
+.price-neutral {
+  color: #f9fafb; 
+}
+
+/* Flash animation for background */
+.flash-up {
+  animation: flashGreen 0.5s ease;
+}
+
+.flash-down {
+  animation: flashRed 0.5s ease;
+}
+
+@keyframes flashGreen {
+  0%   { background-color: rgba(16, 185, 129, 0.3); }
+  100% { background-color: transparent; }
+}
+
+@keyframes flashRed {
+  0%   { background-color: rgba(239, 68, 68, 0.3); }
+  100% { background-color: transparent; }
+}
+
+.price-change {
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.market-search {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid #4b5563;
+  background-color: rgba(31, 41, 55, 0.8);
+  color: #f9fafb;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.market-search::placeholder {
+  color: #9ca3af;
+}
+
+.market-search:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 6px rgba(99,102,241,0.5);
+}
+.pin-icon {
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: #9ca3af;
+  transition: color 0.2s ease;
+}
+
+.pin-icon:hover {
+  color: #facc15; 
+}
+
+.pin-icon.pinned {
+  color: #facc15; 
+}
+.sort-button {
+  background: none;
+  border: none;
+  color: #a5b4fc;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.sort-button:hover {
+  color: #818cf8;
+}

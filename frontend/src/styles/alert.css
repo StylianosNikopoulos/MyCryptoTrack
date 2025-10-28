@@ -200,3 +200,15 @@
   }
 }
 
+.alert-form-page__current-price {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #d1d5db;
+  background: rgba(99, 102, 241, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+.alert-form-page__current-price strong {
+  color: #6366f1;
+}

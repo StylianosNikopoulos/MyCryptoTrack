@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createAlert, updateAlert } from "../api/alert.api";
 
 const AlertFormPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { alert: existingAlert, symbol: locationSymbol } = location.state || {};
+
+  const { alert: existingAlert, symbol: locationSymbol, price: currentPrice } = location.state || {};
 
   const isEditing = Boolean(existingAlert);
 
@@ -13,7 +14,11 @@ const AlertFormPage = () => {
     isEditing ? existingAlert.symbol : locationSymbol || ""
   );
   const [targetPrice, setTargetPrice] = useState(
-    isEditing ? existingAlert.targetPrice : ""
+    isEditing
+      ? existingAlert.targetPrice
+      : currentPrice 
+        ? currentPrice
+        : ""
   );
   const [type, setType] = useState(isEditing ? existingAlert.type : "SELL");
   const [loading, setLoading] = useState(false);
@@ -28,14 +33,12 @@ const AlertFormPage = () => {
 
     try {
       if (isEditing) {
-        // Update existing alert
         await updateAlert(existingAlert.id, {
           symbol,
           targetPrice: parseFloat(targetPrice),
           type,
         });
       } else {
-        // Create new alert
         await createAlert({
           symbol,
           targetPrice: parseFloat(targetPrice),
@@ -57,6 +60,12 @@ const AlertFormPage = () => {
         <h2 className="alert-form-page__title">
           {isEditing ? `Update Alert for ${symbol}` : `Create Alert for ${symbol}`}
         </h2>
+
+        {currentPrice && (
+          <p className="alert-form-page__current-price">
+            Current Price: <strong>${parseFloat(currentPrice).toFixed(2)}</strong>
+          </p>
+        )}
 
         <label className="alert-form-page__label">
           Alert Type:

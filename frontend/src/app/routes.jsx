@@ -6,6 +6,7 @@ import RegisterPage from "../features/auth/pages/RegisterPage.jsx";
 import MarketOverviewPage from "../features/market/pages/MarketOverviewPage.jsx";
 import AlertsPage from "../features/alerts/pages/AlertsPage.jsx";
 import AlertFormPage from "../features/alerts/pages/AlertFormPage.jsx";
+import CoinDetailsPage from "../features/market/pages/CoinDetailsPage.jsx";
 
 const RoutesConfig = () => {
   const user = useSelector((state) => state.user);
@@ -31,7 +32,7 @@ const RoutesConfig = () => {
         path="/alerts/update"
         element={isAuthenticated ? <AlertFormPage /> : <Navigate to="/login" replace />}
       />
-
+      <Route path="/coin/:symbol" element={<CoinDetailsPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

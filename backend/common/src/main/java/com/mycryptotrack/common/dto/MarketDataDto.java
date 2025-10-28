@@ -12,5 +12,6 @@ import java.time.Instant;
 public class MarketDataDto {
     private String symbol;
     private double price;
+    private double volume;
     private Instant fetchedAt;
 }
