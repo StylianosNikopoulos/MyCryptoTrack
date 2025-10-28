@@ -1,41 +1,85 @@
 package com.mycryptotrack.alert.service.notification;
 
-import com.mycryptotrack.alert.entity.AlertData;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import com.mycryptotrack.alert.dto.NotificationDataDto;
+import com.mycryptotrack.alert.entity.NotificationData;
+import com.mycryptotrack.alert.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Service
-@Slf4j
 @RequiredArgsConstructor
-public class NotificationServiceImpl implements NotificationService {
+@Service
+public class NotificationServiceImpl implements NotificationService{
 
-    private final JavaMailSender mailSender;
+    private final NotificationRepository repository;
 
     @Override
-    public void sendAlert(AlertData alert, double currentPrice) {
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    public List<NotificationDataDto> getAllNotifications() {
+        String email = getUserEmail();
 
-            helper.setTo(alert.getEmail());
-            helper.setSubject("Crypto Alert - " + alert.getSymbol());
-            helper.setText(
-                    "<h2>🚨 Crypto Alert</h2>" +
-                            "<p><b>" + alert.getSymbol() + "</b> has reached your target price of <b>" + alert.getTargetPrice() +
-                            "</b>! Current price: <b>" + currentPrice + "</b></p>",
-                    true
-            );
+        return repository.findByEmailOrderByCreatedAtDesc(email)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
 
-            mailSender.send(message);
-            log.info("📧 Email sent for alert {}", alert.getSymbol());
+    @Override
+    public NotificationDataDto createNotification(String email, String message) {
+        NotificationData n = NotificationData.builder()
+                .email(email)
+                .message(message)
+                .read(false)
+                .createdAt(Instant.now())
+                .build();
 
-        } catch (MessagingException e) {
-            log.error("Failed to send email alert for {}", alert.getSymbol(), e);
-        }
+        return toDto(repository.save(n));
+    }
+
+    @Override
+    public void deleteNotification(Long id) {
+        String email = getUserEmail();
+        NotificationData notif = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notification not found"));
+
+        if (!notif.getEmail().equalsIgnoreCase(email))
+            throw new RuntimeException("Unauthorized");
+
+        repository.delete(notif);
+    }
+
+    @Override
+    public NotificationDataDto markAsRead(Long id) {
+        String email = getUserEmail();
+        NotificationData notif = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notification not found"));
+
+        if(!notif.getEmail().equalsIgnoreCase(email))
+            throw new RuntimeException("Unauthorized");
+        notif.setRead(true);
+
+        return toDto(repository.save(notif));
+    }
+
+    private NotificationDataDto toDto(NotificationData n){
+        return NotificationDataDto.builder()
+                .id(n.getId())
+                .message(n.getMessage())
+                .read(n.isRead())
+                .createdAt(n.getCreatedAt())
+                .build();
+    }
+
+    private String getUserEmail(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Jwt jwt = (Jwt) auth.getPrincipal();
+
+        return jwt.getClaim("email") != null
+                ? jwt.getClaim("email").toString()
+                : jwt.getSubject();
     }
 }

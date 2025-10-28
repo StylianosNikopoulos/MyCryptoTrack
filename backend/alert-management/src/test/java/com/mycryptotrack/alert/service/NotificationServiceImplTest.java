@@ -1,7 +1,7 @@
 package com.mycryptotrack.alert.service;
 
 import com.mycryptotrack.alert.entity.AlertData;
-import com.mycryptotrack.alert.service.notification.NotificationServiceImpl;
+import com.mycryptotrack.alert.service.notificationemail.NotificationEmailServiceImpl;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,11 +23,11 @@ public class NotificationServiceImplTest {
     @Mock
     private MimeMessage mimeMessage;
 
-    private NotificationServiceImpl service;
+    private NotificationEmailServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        service = new NotificationServiceImpl(mailSender);
+        service = new NotificationEmailServiceImpl(mailSender);
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
     }
 

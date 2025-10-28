@@ -24,20 +24,23 @@
 }
 
 .notification-dropdown {
-  position: absolute;
-  right: 0;
-  top: 2rem;
+  position: fixed; 
+  right: 1rem;
+  top: 4rem;
   background: #1f2937;
   color: #f9fafb;
   border: 1px solid #374151;
   border-radius: 0.5rem;
-  width: 300px;
-  max-height: 350px;
+  width: 90%; 
+  max-width: 350px;
+  max-height: 70vh; 
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   padding: 0.5rem;
   z-index: 999;
 }
+
 
 .notification-dropdown ul {
   list-style: none;
@@ -50,9 +53,17 @@
   justify-content: space-between;
   align-items: center;
   background: #111827;
-  margin-bottom: 0.4rem;
-  border-radius: 0.4rem;
-  padding: 0.4rem 0.6rem;
+  color: #f9fafb;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
+  padding: 0.8rem;
+  font-size: 1rem; 
+}
+
+
+.clear-btn, .bell-btn, button {
+  font-size: 1rem; 
+  padding: 6px 10px;
 }
 
 .dropdown-header {
@@ -73,4 +84,64 @@
   text-align: center;
   color: #9ca3af;
   padding: 0.5rem;
+}
+
+.notif-unread {
+  background-color: #fffbe6;
+  color: #111827;
+}
+
+.notif-read {
+  background-color: #f4f4f4;
+  color: #111827;
+}
+
+@media screen and (max-width: 480px) {
+  .notification-dropdown {
+    width: 90vw;
+    right: 5vw;
+    top: 2.5rem;
+    max-height: 60vh;
+    padding: 0.5rem;
+  }
+
+  .notification-dropdown li {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.5rem;
+  }
+
+  .notification-dropdown li div {
+    margin-bottom: 4px;
+  }
+
+  .bell-btn {
+    font-size: 1.6rem;
+  }
+
+  .badge {
+    top: -4px;
+    right: -4px;
+    font-size: 0.65rem;
+    padding: 2px 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .notification-dropdown {
+    right: 5%;
+    top: 3rem;
+    width: 90%;
+  }
+
+  .notification-dropdown li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .notification-dropdown li div + div {
+    margin-top: 6px;
+    display: flex;
+    gap: 6px;
+  }
 }

@@ -1,37 +1,64 @@
 import React, { useEffect, useState } from "react";
 import NotificationDropdown from "./NotificationDropdown";
+import {
+  fetchNotifications,
+  deleteNotification,
+  markAsRead,
+} from "../api/notifications.api";
 
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      if (Math.random() < 0.2) {
-        setNotifications((prev) => [
-          {
-            id: Date.now(),
-            message: "BTC price reached your target!",
-            time: new Date().toLocaleTimeString(),
-          },
-          ...prev,
-        ]);
+    const loadNotifications = async () => {
+      try {
+        const data = await fetchNotifications();
+        setNotifications(data);
+      } catch (err) {
+        console.error("Error fetching notifications:", err);
       }
-    }, 8000);
-    return () => clearInterval(timer);
+    };
+
+    loadNotifications();
+
+    // refresh notifications every 30s
+    const interval = setInterval(loadNotifications, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleToggle = () => setIsOpen(!isOpen);
-  const handleDelete = (id) =>
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteNotification(id);
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
+    } catch (err) {
+      console.error("Error deleting notification:", err);
+    }
+  };
+
+  const handleMarkAsRead = async (id) => {
+    try {
+      const updated = await markAsRead(id);
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+      );
+    } catch (err) {
+      console.error("Error marking notification as read:", err);
+    }
+  };
+
   const handleClearAll = () => setNotifications([]);
 
   return (
     <div className="notification-bell">
       <button className="bell-btn" onClick={handleToggle}>
         🔔
-        {notifications.length > 0 && (
-          <span className="badge">{notifications.length}</span>
+        {notifications.filter((n) => !n.read).length > 0 && (
+          <span className="badge">
+            {notifications.filter((n) => !n.read).length}
+          </span>
         )}
       </button>
 
@@ -40,6 +67,7 @@ const NotificationBell = () => {
           notifications={notifications}
           onDelete={handleDelete}
           onClearAll={handleClearAll}
+          onMarkAsRead={handleMarkAsRead}
         />
       )}
     </div>

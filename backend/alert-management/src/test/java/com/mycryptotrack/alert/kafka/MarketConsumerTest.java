@@ -5,6 +5,7 @@ import com.mycryptotrack.alert.enums.AlertType;
 import com.mycryptotrack.alert.entity.AlertData;
 import com.mycryptotrack.alert.repository.AlertRepository;
 import com.mycryptotrack.alert.service.notification.NotificationService;
+import com.mycryptotrack.alert.service.notificationemail.NotificationEmailService;
 import com.mycryptotrack.common.dto.MarketDataDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,16 @@ class MarketConsumerTest {
     private AlertRepository repository;
 
     @Mock
-    private NotificationService notificationService;
+    private NotificationEmailService notificationService;
 
     private MarketConsumer consumer;
 
+    @Mock
+    private NotificationService notificationDbService;
+
     @BeforeEach
     void setUp() {
-        consumer = new MarketConsumer(mapper, repository, notificationService);
+        consumer = new MarketConsumer(mapper, repository, notificationService,notificationDbService);
     }
 
     @Test

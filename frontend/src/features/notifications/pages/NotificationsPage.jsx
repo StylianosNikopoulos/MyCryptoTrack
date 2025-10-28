@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { fetchNotifications, deleteNotification } from "../api/notifications.api";
+import {
+  fetchNotifications,
+  deleteNotification,
+  markAsRead,
+} from "../api/notifications.api";
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -28,7 +32,19 @@ const NotificationsPage = () => {
     }
   };
 
-  if (loading) return <p style={{ textAlign: "center" }}>Loading notifications...</p>;
+  const handleMarkAsRead = async (id) => {
+    try {
+      await markAsRead(id);
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+      );
+    } catch (err) {
+      console.error("Error marking notification as read:", err);
+    }
+  };
+
+  if (loading)
+    return <p style={{ textAlign: "center" }}>Loading notifications...</p>;
 
   return (
     <div className="notifications-page">
@@ -39,12 +55,32 @@ const NotificationsPage = () => {
       ) : (
         <ul className="notifications-list">
           {notifications.map((n) => (
-            <li key={n.id}>
+            <li
+              key={n.id}
+              style={{
+                background: n.read ? "#f6f6f6" : "#fffbe6",
+                padding: "10px",
+                marginBottom: "6px",
+                borderRadius: "8px",
+              }}
+            >
               <div>
                 <p>{n.message}</p>
                 <small>{new Date(n.createdAt).toLocaleString()}</small>
               </div>
-              <button onClick={() => handleDelete(n.id)}>Delete</button>
+              <div style={{ marginTop: "4px" }}>
+                {!n.read && (
+                  <button onClick={() => handleMarkAsRead(n.id)}>
+                    Mark as Read
+                  </button>
+                )}
+                <button
+                  onClick={() => handleDelete(n.id)}
+                  style={{ marginLeft: "8px" }}
+                >
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>
