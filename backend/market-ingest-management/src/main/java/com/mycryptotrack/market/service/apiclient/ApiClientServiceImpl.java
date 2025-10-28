@@ -30,18 +30,4 @@ public class ApiClientServiceImpl implements ApiClientService {
                 .bodyToFlux(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .timeout(Duration.ofSeconds(10));
     }
-
-    @Override
-    public Flux<Object[]> getKlines(String symbol, String interval, int limit) {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/api/v3/klines")
-                        .queryParam("symbol", symbol)
-                        .queryParam("interval", interval)
-                        .queryParam("limit", limit)
-                        .build())
-                .retrieve()
-                .bodyToFlux(Object[].class)
-                .timeout(Duration.ofSeconds(10));
-    }
 }

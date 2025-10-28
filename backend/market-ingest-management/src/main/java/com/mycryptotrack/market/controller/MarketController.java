@@ -28,11 +28,6 @@ public class MarketController {
         return service.fetchOnceAndReturn();
     }
 
-    @GetMapping("/history/{symbol}")
-    public Flux<MarketDataDto> getHistory(@PathVariable String symbol, @RequestParam(defaultValue = "100") int limit) {
-        return service.getHistoryForSymbol(symbol, limit);
-    }
-
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<MarketDataDto> streamMarketData() {
         return marketStreamService.streamData();

@@ -5,19 +5,16 @@ import com.mycryptotrack.market.exception.CustomException;
 import com.mycryptotrack.market.kafka.Producer;
 import com.mycryptotrack.market.service.apiclient.ApiClientServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import com.mycryptotrack.market.entity.MarketData ;
 import com.mycryptotrack.market.repository.MarketDataRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
 
 @Service
@@ -71,30 +68,6 @@ public class MarketIngestServiceImpl implements MarketIngestService {
                     .build());
         }
         return dtos;
-    }
-
-    @Override
-    public Flux<MarketDataDto> getHistoryForSymbol(String symbol, int limit) {
-        return apiClient.getKlines(symbol, "1d", limit)
-                .map(kline -> {
-                    if (kline == null || kline.length < 6) return null;
-                    try {
-                        long openTime = Long.parseLong(kline[0].toString());
-                        double closePrice = Double.parseDouble(kline[4].toString());
-                        double volume = Double.parseDouble(kline[5].toString());
-
-                        return MarketDataDto.builder()
-                                .symbol(symbol)
-                                .price(closePrice)
-                                .volume(volume)
-                                .fetchedAt(Instant.ofEpochMilli(openTime))
-                                .build();
-                    } catch (Exception e) {
-                        log.error("Error parsing kline: {}", Arrays.toString(kline), e);
-                        return null;
-                    }
-                })
-                .filter(dto -> dto != null);
     }
 
     private MarketData mapToEntityAndDto(Map<String, Object> data) {

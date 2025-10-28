@@ -11,7 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { fetchCoins, fetchCoinHistory, streamUrl } from "../api/market.api";
+import { fetchCoins, streamUrl } from "../api/market.api";
 
 ChartJS.register(
   CategoryScale,
@@ -29,42 +29,60 @@ const CoinDetailsPage = () => {
   const [coin, setCoin] = useState(null);
   const [priceHistory, setPriceHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [range, setRange] = useState("1y");
+
+  const rangeOptions = {
+    "1m": 30,
+    "3m": 90,
+    "6m": 180,
+    "1y": 365,
+    all: 1000,
+  };
+
+  const BIN_BASE_URL = "https://api.binance.com/api/v3/klines";
 
   // Fetch coin info + historical data
   useEffect(() => {
     const loadData = async () => {
+      if (!symbol) return;
+      setLoading(true);
       try {
         const allCoins = await fetchCoins();
         const selectedCoin = allCoins.find((c) => c.symbol === symbol);
         if (selectedCoin) setCoin(selectedCoin);
 
-        const history = await fetchCoinHistory(symbol, 365); 
-        const formattedHistory = history.map((h) => ({
-          price: h.price,
-          time: new Date(h.fetchedAt),
+        const limit = rangeOptions[range] || 365;
+
+        const url = `${BIN_BASE_URL}?symbol=${symbol}&interval=1d&limit=${limit}`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const formattedHistory = data.map((kline) => ({
+          price: parseFloat(kline[4]),
+          time: new Date(kline[0]),
         }));
+
         setPriceHistory(formattedHistory);
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching Binance data:", err);
       } finally {
         setLoading(false);
       }
     };
-
     loadData();
-  }, [symbol]);
+  }, [symbol, range]);
 
   // SSE for live price updates
   useEffect(() => {
     if (!coin) return;
-
     const source = new EventSource(streamUrl);
 
     source.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.symbol === coin.symbol) {
         setPriceHistory((prev) => [
-          ...prev.slice(-364),
+          ...prev.slice(-rangeOptions[range]),
           { price: data.price, time: new Date() },
         ]);
       }
@@ -72,11 +90,10 @@ const CoinDetailsPage = () => {
 
     source.onerror = () => source.close();
     return () => source.close();
-  }, [coin]);
+  }, [coin, range]);
 
   if (loading || !coin) return <p>Loading coin data...</p>;
 
-  // Prepare chart
   const chartData = {
     labels: priceHistory.map((p) =>
       p.time.toLocaleDateString("en-US", { month: "short", day: "numeric" })
@@ -98,9 +115,7 @@ const CoinDetailsPage = () => {
       legend: { display: true },
       tooltip: {
         callbacks: {
-          label: function (context) {
-            return `$${context.raw.toLocaleString()}`;
-          },
+          label: (context) => `$${context.raw.toLocaleString()}`,
         },
       },
     },
@@ -113,6 +128,19 @@ const CoinDetailsPage = () => {
   return (
     <div className="coin-details-page">
       <h1>{coin.symbol} Chart</h1>
+
+      {/* Range Selector */}
+      <div className="range-selector">
+        {Object.keys(rangeOptions).map((r) => (
+          <button
+            key={r}
+            className={range === r ? "active-range" : ""}
+            onClick={() => setRange(r)}
+          >
+            {r.toUpperCase()}
+          </button>
+        ))}
+      </div>
 
       <button
         onClick={() => {
