@@ -12,6 +12,7 @@ import "./styles/footer.css";
 import "./styles/alert.css";
 import "./styles/ConfirmModal.css"; 
 import "./styles/coinDetails.css"; 
+import "./styles/notifications.css";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

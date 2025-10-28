@@ -1,0 +1,76 @@
+.notification-bell {
+  position: relative;
+  display: inline-block;
+}
+
+.bell-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  color: #fff;
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  padding: 2px 5px;
+}
+
+.notification-dropdown {
+  position: absolute;
+  right: 0;
+  top: 2rem;
+  background: #1f2937;
+  color: #f9fafb;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  width: 300px;
+  max-height: 350px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  padding: 0.5rem;
+  z-index: 999;
+}
+
+.notification-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.notification-dropdown li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111827;
+  margin-bottom: 0.4rem;
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.6rem;
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: #60a5fa;
+  cursor: pointer;
+}
+
+.no-notifs {
+  text-align: center;
+  color: #9ca3af;
+  padding: 0.5rem;
+}

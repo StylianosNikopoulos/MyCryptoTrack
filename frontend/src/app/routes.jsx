@@ -7,6 +7,7 @@ import MarketOverviewPage from "../features/market/pages/MarketOverviewPage.jsx"
 import AlertsPage from "../features/alerts/pages/AlertsPage.jsx";
 import AlertFormPage from "../features/alerts/pages/AlertFormPage.jsx";
 import CoinDetailsPage from "../features/market/pages/CoinDetailsPage.jsx";
+import NotificationsPage from "../features/notifications/pages/NotificationsPage.jsx";
 
 const RoutesConfig = () => {
   const user = useSelector((state) => state.user);
@@ -18,6 +19,11 @@ const RoutesConfig = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
+      <Route
+        path="/notifications"
+        element={isAuthenticated ? <NotificationsPage /> : <Navigate to="/login" replace />}
+      />
+      
       <Route
         path="/alerts"
         element={isAuthenticated ? <AlertsPage /> : <Navigate to="/login" replace />}

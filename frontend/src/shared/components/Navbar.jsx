@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../app/store/slices/userSlice";
-import "../../styles/navbar.css"; 
+import NotificationBell from "../../features/notifications/components/NotificationBell.jsx";
+import "../../styles/navbar.css";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -20,8 +21,16 @@ const Navbar = () => {
       </div>
 
       <div className="nav-actions">
+        {user?.token && (
+          <div className="notification-area">
+            <NotificationBell />
+          </div>
+        )}
+
         {user?.token ? (
-          <button className="logout-btn" onClick={handleLogout}>Logout</button>
+          <button className="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
         ) : (
           <>
             <Link to="/login">Login</Link>
