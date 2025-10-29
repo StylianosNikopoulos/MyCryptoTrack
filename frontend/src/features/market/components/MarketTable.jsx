@@ -16,18 +16,32 @@ const MarketTable = ({ data, rowsPerPage = 10 }) => {
   const navigate = useNavigate();
 
   // Track previous prices for up/down
-  useEffect(() => {
-    const newStatus = { ...coinStatus };
-    data.forEach((coin) => {
-      const prev = prevPricesRef.current[coin.symbol];
-      const diff = prev !== undefined ? coin.price - prev : 0;
-      if (diff > 0) newStatus[coin.symbol] = "up";
-      else if (diff < 0) newStatus[coin.symbol] = "down";
-      prevPricesRef.current[coin.symbol] = coin.price;
-    });
-    setCoinStatus(newStatus);
+useEffect(() => {
+  const newStatus = { ...coinStatus };
+  let changed = false;
+
+  data.forEach((coin) => {
+    const prev = prevPricesRef.current[coin.symbol];
+    const diff = prev !== undefined ? coin.price - prev : 0;
+    let status = newStatus[coin.symbol] || "neutral";
+
+    if (diff > 0) status = "up";
+    else if (diff < 0) status = "down";
+
+    if (newStatus[coin.symbol] !== status) {
+      newStatus[coin.symbol] = status;
+      changed = true;
+    }
+
+    prevPricesRef.current[coin.symbol] = coin.price;
+  });
+
+  if (changed) {
+    setCoinStatus({ ...newStatus }); 
     localStorage.setItem("coinStatus", JSON.stringify(newStatus));
-  }, [data]);
+  }
+}, [data]);
+
 
   // Favourite
   const togglePin = (symbol) => {
