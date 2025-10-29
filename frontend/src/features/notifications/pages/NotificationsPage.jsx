@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   fetchNotifications,
   deleteNotification,
-  markAsRead,
 } from "../api/notifications.api";
 
 const NotificationsPage = () => {
@@ -32,17 +31,6 @@ const NotificationsPage = () => {
     }
   };
 
-  const handleMarkAsRead = async (id) => {
-    try {
-      await markAsRead(id);
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-      );
-    } catch (err) {
-      console.error("Error marking notification as read:", err);
-    }
-  };
-
   if (loading)
     return <p style={{ textAlign: "center" }}>Loading notifications...</p>;
 
@@ -69,11 +57,6 @@ const NotificationsPage = () => {
                 <small>{new Date(n.createdAt).toLocaleString()}</small>
               </div>
               <div style={{ marginTop: "4px" }}>
-                {!n.read && (
-                  <button onClick={() => handleMarkAsRead(n.id)}>
-                    Mark as Read
-                  </button>
-                )}
                 <button
                   onClick={() => handleDelete(n.id)}
                   style={{ marginLeft: "8px" }}

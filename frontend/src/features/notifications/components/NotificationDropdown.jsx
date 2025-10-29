@@ -4,7 +4,6 @@ const NotificationDropdown = ({
   notifications,
   onDelete,
   onClearAll,
-  onMarkAsRead,
 }) => {
   return (
     <div className="notification-dropdown">
@@ -38,9 +37,6 @@ const NotificationDropdown = ({
                 </span>
               </div>
               <div style={{ display: "flex", gap: "6px" }}>
-                {!n.read && (
-                  <button onClick={() => onMarkAsRead(n.id)}>✔️</button>
-                )}
                 <button onClick={() => onDelete(n.id)}>✖</button>
               </div>
             </li>

@@ -19,9 +19,3 @@ export const deleteNotification = async (id) => {
   if (!res.ok) throw new Error("Failed to delete notification");
   return true;
 };
-
-export const markAsRead = async (id) => {
-  const res = await fetch(`${BASE_URL}/${id}/read`, { method: "PATCH", headers: getAuthHeaders() });
-  if (!res.ok) throw new Error("Failed to mark as read");
-  return await res.json();
-};

@@ -3,7 +3,6 @@ import NotificationDropdown from "./NotificationDropdown";
 import {
   fetchNotifications,
   deleteNotification,
-  markAsRead,
 } from "../api/notifications.api";
 
 const NotificationBell = () => {
@@ -38,17 +37,6 @@ const NotificationBell = () => {
     }
   };
 
-  const handleMarkAsRead = async (id) => {
-    try {
-      const updated = await markAsRead(id);
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-      );
-    } catch (err) {
-      console.error("Error marking notification as read:", err);
-    }
-  };
-
   const handleClearAll = () => setNotifications([]);
 
   return (
@@ -67,7 +55,6 @@ const NotificationBell = () => {
           notifications={notifications}
           onDelete={handleDelete}
           onClearAll={handleClearAll}
-          onMarkAsRead={handleMarkAsRead}
         />
       )}
     </div>
