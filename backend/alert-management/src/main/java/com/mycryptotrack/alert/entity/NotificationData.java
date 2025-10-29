@@ -5,18 +5,22 @@ import lombok.*;
 import java.time.Instant;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "notification")
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "notifications")
 public class NotificationData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name="email")
     private String email;
+
+    @Column(name="message")
     private String message;
-    private boolean read;
+
+    @Column(name="created_at")
     private Instant createdAt;
 }

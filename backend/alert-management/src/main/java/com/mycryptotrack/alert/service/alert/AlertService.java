@@ -2,8 +2,6 @@ package com.mycryptotrack.alert.service.alert;
 
 import com.mycryptotrack.alert.dto.AlertDataDto;
 import com.mycryptotrack.alert.enums.AlertType;
-
-import javax.accessibility.AccessibleKeyBinding;
 import java.util.List;
 
 public interface AlertService {

@@ -25,33 +25,37 @@ public class MarketConsumer {
         try {
             MarketDataDto marketData = mapper.readValue(message, MarketDataDto.class);
 
-            repository.findBySymbolAndTriggeredFalse(marketData.getSymbol())
+            repository.findBySymbol(marketData.getSymbol())
                     .forEach(alert -> {
                         boolean shouldTrigger = switch (alert.getType()) {
                             case SELL -> marketData.getPrice() >= alert.getTargetPrice();
                             case BUY -> marketData.getPrice() <= alert.getTargetPrice();
                         };
 
-                        if (!alert.isTriggered() && shouldTrigger) {
-                            alert.setTriggered(true);
-                            repository.save(alert);
+                        if (shouldTrigger) {
+                            if (!alert.isTriggered()) {
+                                alert.setTriggered(true);
+                                repository.save(alert);
+                                notificationService.sendAlert(alert, marketData.getPrice());
+                            }
 
-                            // Send email
-                            notificationService.sendAlert(alert, marketData.getPrice());
-
-                            // Create in-app notification
+                            // Create notification only if not exists
                             String messageText = String.format(
                                     "%s reached your target price of %.2f! Current price: %.2f",
                                     alert.getSymbol(),
                                     alert.getTargetPrice(),
                                     marketData.getPrice()
                             );
-                            notificationDbService.createNotification(alert.getEmail(), messageText);
 
-                            log.info("In-app notification created for {}", alert.getEmail());
+                            boolean exists = notificationDbService.getAllNotifications(alert.getEmail())
+                                    .stream()
+                                    .anyMatch(n -> n.getMessage().equals(messageText));
+
+                            if (!exists) {
+                                notificationDbService.createNotificationForEmail(alert.getEmail(), messageText);
+                            }
                         }
                     });
-
         } catch (Exception e) {
             log.error("Error processing market data: {}", message, e);
         }

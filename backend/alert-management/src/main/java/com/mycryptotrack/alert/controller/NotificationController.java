@@ -21,9 +21,4 @@ public class NotificationController {
     public void deleteNotification(@PathVariable Long id) {
         service.deleteNotification(id);
     }
-
-    @PatchMapping("/{id}/read")
-    public NotificationDataDto markAsRead(@PathVariable Long id) {
-        return service.markAsRead(id);
-    }
 }

@@ -40,7 +40,6 @@ public class AlertServiceImpl implements AlertService {
         return mapToDto(saved);
     }
 
-
     @Override
     public AlertDataDto updateAlert(Long id, String symbol, double targetPrice, String ignoredEmail, AlertType type) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -63,7 +62,6 @@ public class AlertServiceImpl implements AlertService {
         return  mapToDto(updated);
     }
 
-
     @Override
     public List<AlertDataDto> getAllAlerts() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -78,7 +76,6 @@ public class AlertServiceImpl implements AlertService {
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public void deleteAlert(Long id) {
@@ -101,7 +98,6 @@ public class AlertServiceImpl implements AlertService {
 
         repository.delete(alert);
     }
-
 
     private AlertDataDto mapToDto(AlertData alert) {
         return AlertDataDto.builder()

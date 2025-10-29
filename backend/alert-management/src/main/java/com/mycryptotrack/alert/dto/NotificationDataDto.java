@@ -9,6 +9,5 @@ import java.time.Instant;
 public class NotificationDataDto {
     private Long id;
     private String message;
-    private boolean read;
     private Instant createdAt;
 }
