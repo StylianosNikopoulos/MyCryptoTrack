@@ -1,10 +1,9 @@
-package com.mycryptotrack.alert.service;
+package com.mycryptotrack.alert.service.alert;
 
 import com.mycryptotrack.alert.dto.AlertDataDto;
 import com.mycryptotrack.alert.enums.AlertType;
 import com.mycryptotrack.alert.entity.AlertData;
 import com.mycryptotrack.alert.repository.AlertRepository;
-import com.mycryptotrack.alert.service.alert.AlertServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +19,15 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
+
+/**
+ * Unit tests for {@link AlertServiceImpl}.
+ *
+ * - Creating BUY and SELL alerts and verifying saved entity and DTO.
+ * - Retrieving all alerts for the current authenticated user.
+ * - Deleting an alert and checking authorization.
+ *
+ */
 
 @ExtendWith(MockitoExtension.class)
 class AlertServiceImplTest {
@@ -110,7 +118,6 @@ class AlertServiceImplTest {
                 .id(2L).symbol("ETHUSDT").targetPrice(2000.0)
                 .triggered(true).email("test@email.com").fetchedAt(Instant.now()).build();
 
-        // Mock repository to return only alerts for the current JWT email
         when(repository.findByEmail("test@email.com"))
                 .thenReturn(List.of(alert1, alert2));
 
@@ -137,25 +144,20 @@ class AlertServiceImplTest {
     void deleteAlert_ShouldCallRepositoryDelete() {
         Long id = 23L;
 
-        // Mock an alert owned by the current JWT user
         AlertData alert = AlertData.builder()
                 .id(id)
                 .symbol("BTCUSDT")
                 .targetPrice(30000.0)
-                .email("test@email.com") // must match JWT
+                .email("test@email.com")
                 .triggered(false)
                 .build();
 
-        // Make repository.findById return the alert
         when(repository.findById(id)).thenReturn(java.util.Optional.of(alert));
 
-        // Call the service
         service.deleteAlert(id);
 
-        // Verify delete was called
         verify(repository, times(1)).delete(alert);
     }
-
 }
 
 

@@ -1,7 +1,6 @@
-package com.mycryptotrack.alert.service;
+package com.mycryptotrack.alert.service.notificationemail;
 
 import com.mycryptotrack.alert.entity.AlertData;
-import com.mycryptotrack.alert.service.notificationemail.NotificationEmailServiceImpl;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +13,16 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Unit tests for {@link NotificationEmailServiceImpl}.
+ *
+ * - MimeMessage is created and sent via JavaMailSender.
+ * - The email is sent to the correct recipient.
+ * - The email content contains the expected alert data.
+ */
+
 @ExtendWith(MockitoExtension.class)
-public class NotificationServiceImplTest {
+class NotificationEmailServiceImplTest {
 
     @Mock
     private JavaMailSender mailSender;

@@ -5,6 +5,7 @@ import com.mycryptotrack.alert.enums.AlertType;
 import com.mycryptotrack.alert.entity.AlertData;
 import com.mycryptotrack.alert.repository.AlertRepository;
 import com.mycryptotrack.alert.service.notification.NotificationService;
+import com.mycryptotrack.alert.service.notification.NotificationServiceImplTest;
 import com.mycryptotrack.alert.service.notificationemail.NotificationEmailService;
 import com.mycryptotrack.common.dto.MarketDataDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,14 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Unit tests for {@link MarketConsumerTest}.
+ *
+ * 1. Alerts are correctly triggered based on market prices (BUY or SELL).
+ * 2. Alerts are not triggered if conditions are not met.
+ * 3. Notifications are sent via email and saved to the database.
+ * 4. Exceptions in JSON mapping are handled gracefully.
+ */
 @ExtendWith(MockitoExtension.class)
 class MarketConsumerTest {
 
@@ -28,14 +37,14 @@ class MarketConsumerTest {
     @Mock
     private NotificationEmailService notificationService;
 
-    private MarketConsumer consumer;
-
     @Mock
     private NotificationService notificationDbService;
 
+    private MarketConsumer consumer;
+
     @BeforeEach
     void setUp() {
-        consumer = new MarketConsumer(mapper, repository, notificationService,notificationDbService);
+        consumer = new MarketConsumer(mapper, repository, notificationService, notificationDbService);
     }
 
     @Test
@@ -44,6 +53,7 @@ class MarketConsumerTest {
         MarketDataDto marketData = new MarketDataDto("BTCUSDT", 29000.0, null);
         when(mapper.readValue(message, MarketDataDto.class)).thenReturn(marketData);
 
+        // Setup a BUY alert that should trigger
         AlertData alert = new AlertData();
         alert.setSymbol("BTCUSDT");
         alert.setTargetPrice(30000.0);
@@ -51,7 +61,7 @@ class MarketConsumerTest {
         alert.setType(AlertType.BUY);
         alert.setEmail("test@email.com");
 
-        when(repository.findBySymbolAndTriggeredFalse("BTCUSDT")).thenReturn(List.of(alert));
+        when(repository.findBySymbol("BTCUSDT")).thenReturn(List.of(alert));
 
         consumer.listen(message);
 
@@ -73,7 +83,7 @@ class MarketConsumerTest {
         alert.setType(AlertType.SELL);
         alert.setEmail("test@email.com");
 
-        when(repository.findBySymbolAndTriggeredFalse("BTCUSDT")).thenReturn(List.of(alert));
+        when(repository.findBySymbol("BTCUSDT")).thenReturn(List.of(alert));
 
         consumer.listen(message);
 
@@ -88,21 +98,19 @@ class MarketConsumerTest {
         MarketDataDto marketData = new MarketDataDto("BTCUSDT", 31000.0, null);
         when(mapper.readValue(message, MarketDataDto.class)).thenReturn(marketData);
 
-        // BUY alert above current price
         AlertData buyAlert = new AlertData();
         buyAlert.setSymbol("BTCUSDT");
         buyAlert.setTargetPrice(30000.0);
         buyAlert.setTriggered(false);
         buyAlert.setType(AlertType.BUY);
 
-        // SELL alert below current price
         AlertData sellAlert = new AlertData();
         sellAlert.setSymbol("BTCUSDT");
         sellAlert.setTargetPrice(32000.0);
         sellAlert.setTriggered(false);
         sellAlert.setType(AlertType.SELL);
 
-        when(repository.findBySymbolAndTriggeredFalse("BTCUSDT")).thenReturn(List.of(buyAlert, sellAlert));
+        when(repository.findBySymbol("BTCUSDT")).thenReturn(List.of(buyAlert, sellAlert));
 
         consumer.listen(message);
 
