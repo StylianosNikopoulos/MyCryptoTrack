@@ -49,8 +49,6 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_MIN_INSYNC_REPLICAS: 1
-
-      # Optional: auto topic creation for dev
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     ports:
       - "9092:9092"
@@ -141,7 +139,6 @@ services:
     command: sh -c "npm install && npm start"
     networks:
       - mycryptotrack-net
-
 
 volumes:
   postgres_data:
