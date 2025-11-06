@@ -33,7 +33,6 @@
     <module>auth-management</module>
     <module>market-ingest-management</module>
     <module>alert-management</module>
-    <module>api-gateway</module>
     <module>common</module>
   </modules>
 

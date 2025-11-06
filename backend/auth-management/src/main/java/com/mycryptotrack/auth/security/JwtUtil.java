@@ -3,6 +3,7 @@ package com.mycryptotrack.auth.security;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 import java.util.Date;
 
 @Component
@@ -10,7 +11,8 @@ public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
-    private final long EXPIRATION = 1000 * 60 * 60 * 10;
+
+    private final long EXPIRATION = 1000 * 60 * 60 * 10; // for 10 hours
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -34,7 +36,8 @@ public class JwtUtil {
     private boolean isTokenExpired(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
-                .getBody().getExpiration()
+                .getBody()
+                .getExpiration()
                 .before(new Date());
     }
 }

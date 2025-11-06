@@ -25,6 +25,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void deleteNotification(Long id) {
         String email = getUserEmail();
+
         NotificationData notif = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notification not found"));
 
@@ -66,9 +67,11 @@ public class NotificationServiceImpl implements NotificationService {
 
     private String getUserEmail() {
         var auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+
         if (auth == null || !(auth.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt jwt)) {
             throw new RuntimeException("No authenticated user found");
         }
+
         return jwt.getClaim("email") != null ? jwt.getClaim("email").toString() : jwt.getSubject();
     }
 }

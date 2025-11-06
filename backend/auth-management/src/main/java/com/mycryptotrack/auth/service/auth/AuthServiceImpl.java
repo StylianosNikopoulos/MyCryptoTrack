@@ -23,12 +23,15 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new CustomException("Email already in use");
         }
+
         if (user.getRole() == null) {
             user.setRole("USER");
         }
+
         if (user.getCreatedAt() == null) {
             user.setCreatedAt(LocalDateTime.now());
         }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

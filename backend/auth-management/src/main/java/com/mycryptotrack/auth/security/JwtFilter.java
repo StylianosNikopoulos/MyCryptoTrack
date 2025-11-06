@@ -21,6 +21,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Value("${jwt.secret}")
     private String secretKey;
+
     private final UserDetailsService userDetailsService;
 
     public JwtFilter(UserDetailsService userDetailsService) {
@@ -29,10 +30,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        return path.startsWith("/swagger-ui")
-                || path.startsWith("/v3/api-docs")
-                || path.startsWith("/api/auth");
+        return request.getRequestURI().startsWith("/api/auth");
     }
 
     @Override
@@ -61,17 +59,11 @@ public class JwtFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             } catch (Exception e) {
-                if (!request.getRequestURI().startsWith("/swagger-ui")) {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
-                    return;
-                }
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
+                return;
             }
         }
 
         filterChain.doFilter(request, response);
     }
 }
-
-
-
-

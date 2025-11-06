@@ -38,6 +38,12 @@
       <scope>import</scope>
     </dependency>
 
+    <!-- Spring Security -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
     <!-- Spring Data JPA & Database -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
