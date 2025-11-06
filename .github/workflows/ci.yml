@@ -21,21 +21,23 @@ jobs:
           java-version: 21
           cache: maven
 
-      - name: Verify Docker Compose installation
+      - name: Verify Docker Compose
         run: docker compose version
 
       - name: Start services
-        # pass secrets as environment to Docker Compose
+        env:                # <-- Secrets go here
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: |
-          POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
-          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-          POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
           docker compose up -d postgres kafka zookeeper
 
       - name: Wait for Postgres and Kafka
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
         run: |
           echo "⏳ Waiting for Postgres..."
-          until docker exec postgres pg_isready -U ${{ secrets.POSTGRES_USER }} >/dev/null 2>&1; do
+          until docker exec postgres pg_isready -U $POSTGRES_USER >/dev/null 2>&1; do
             sleep 2
           done
           echo "Postgres is ready!"
@@ -47,5 +49,4 @@ jobs:
         run: mvn -B clean verify
 
       - name: Stop and clean up
-        if: always()
         run: docker compose down -v
