@@ -25,18 +25,17 @@ jobs:
         run: docker compose version
 
       - name: Start services
-        env:                # <-- Secrets go here
+        env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-        run: |
-          docker compose up -d postgres kafka zookeeper
+        run: docker compose up -d postgres kafka zookeeper
 
       - name: Wait for Postgres and Kafka
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
         run: |
-          echo "⏳ Waiting for Postgres..."
+          echo "Waiting for Postgres..."
           until docker exec postgres pg_isready -U $POSTGRES_USER >/dev/null 2>&1; do
             sleep 2
           done
@@ -49,4 +48,5 @@ jobs:
         run: mvn -B clean verify
 
       - name: Stop and clean up
+        if: always()
         run: docker compose down -v

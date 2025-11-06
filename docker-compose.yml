@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-  # Postgres Database
   postgres:
     image: postgres:16
     container_name: postgres
@@ -19,7 +18,6 @@ services:
     networks:
       - mycryptotrack-net
 
-  # Zookeeper for Kafka
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: zookeeper
@@ -31,7 +29,6 @@ services:
     networks:
       - mycryptotrack-net
 
-  # Kafka Broker
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
@@ -55,7 +52,6 @@ services:
     networks:
       - mycryptotrack-net
 
-  # Auth Management
   auth-management:
     image: openjdk:21
     container_name: auth-management
@@ -73,7 +69,6 @@ services:
     networks:
       - mycryptotrack-net
 
-  # Market Management
   market-ingest-management:
     image: openjdk:21
     container_name: market-ingest-management
@@ -91,7 +86,6 @@ services:
     networks:
       - mycryptotrack-net
 
-  # Alert Management
   alert-management:
     image: openjdk:21
     env_file:
@@ -109,7 +103,6 @@ services:
     networks:
       - mycryptotrack-net
 
-  #Frontend
   frontend:
     image: node:20
     container_name: frontend
