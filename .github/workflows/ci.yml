@@ -25,11 +25,12 @@ jobs:
         run: docker compose version
 
       - name: Start services
-        run: docker compose up -d postgres kafka zookeeper
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        # pass secrets as environment to Docker Compose
+        run: |
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
+          docker compose up -d postgres kafka zookeeper
 
       - name: Wait for Postgres and Kafka
         run: |
@@ -40,7 +41,6 @@ jobs:
           echo "Postgres is ready!"
           echo "Waiting for Kafka..."
           sleep 15
-          echo "Kafka is ready!"
 
       - name: Build and run tests
         working-directory: ./backend/market-ingest-management
