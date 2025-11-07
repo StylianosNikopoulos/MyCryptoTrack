@@ -3,7 +3,7 @@
 **MyCryptoTrack** is a full-stack microservices application for **real-time cryptocurrency monitoring and alerting**, built with **Spring Boot**, **React**, **Kafka**, **PostgreSQL**, and **Docker Compose**.  
 It continuously streams live market data, lets users create personalized buy/sell alerts, and notifies them instantly via email and in-app notifications.
 
----
+----
 
 ## 🚀 Features
 
