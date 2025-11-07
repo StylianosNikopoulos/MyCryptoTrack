@@ -1,5 +1,4 @@
-# <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/ccd18ebd-49e4-4753-818b-3b9f1f2ff447" />
- MyCryptoTrack – Real-Time Cryptocurrency Tracking Platform
+# MyCryptoTrack – Real-Time Cryptocurrency Tracking Platform
 
 **MyCryptoTrack** is a full-stack microservices application for **real-time cryptocurrency monitoring and alerting**, built with **Spring Boot**, **React**, **Kafka**, **PostgreSQL**, and **Docker Compose**.  
 It continuously streams live market data, lets users create personalized buy/sell alerts, and notifies them instantly via email and in-app notifications.
