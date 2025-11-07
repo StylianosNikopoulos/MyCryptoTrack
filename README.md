@@ -1,3 +1,62 @@
+# 🪙 MyCryptoTrack – Real-Time Cryptocurrency Tracking Platform
+
+**MyCryptoTrack** is a full-stack microservices application for **real-time cryptocurrency monitoring and alerting**, built with **Spring Boot**, **React**, **Kafka**, **PostgreSQL**, and **Docker Compose**.  
+It continuously streams live market data, lets users create personalized buy/sell alerts, and notifies them instantly via email and in-app notifications.
+
+---
+
+## 🚀 Features
+
+### 🧩 Backend (Spring Boot Microservices)
+- **Market Service:**  
+  Fetches and streams live cryptocurrency data from public APIs.  
+  Publishes updates to Kafka and persists market data in PostgreSQL.
+- **Alert Service:**  
+  Handles alert creation, updates, and deletions.  
+  Consumes market data from Kafka to trigger alerts when target prices are reached.  
+  Sends email + in-app notifications via notification service.
+- **Auth Service:**  
+  Secure user registration and JWT-based authentication.
+- **Notification Service:**  
+  Stores and serves triggered alerts for users.
+
+### 💻 Frontend (React)
+- Real-time live ticker of cryptocurrency prices using Server-Sent Events.
+- Create, update, and delete price alerts visually.
+- View triggered notifications in a responsive UI.
+- OAuth2 / JWT authentication integrated with backend.
+
+### ⚙️ Infrastructure
+- **Kafka + Zookeeper:** Event streaming for real-time updates.
+- **PostgreSQL:** Central relational database shared across services.
+- **Docker Compose:** Orchestrates multi-service environment.
+- **CI:** GitHub Actions pipeline automatically builds, tests, and validates the project on every commit.
+
+---
+
+## 🏗️ Architecture Overview
+
+                    ┌───────────────────────────┐
+                    │        React UI           │
+                    │ (User Interface + Auth)   │
+                    └────────────┬──────────────┘
+                                 │
+                     REST / WebSocket / SSE
+                                 │
+ ┌──────────────────────────────────────────────────────────────────┐
+ │                          Spring Boot Backend                     │
+ │                                                                  │
+ │   ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     │
+ │   │     Auth     │     │    Alert     │     │    Market    │     │
+ │   │ (JWT + OAuth)│     │ Alerts +     │     │ (Live Data + │     │
+ │   │              │     │ Notifications│     │ Kafka Prod.) │     │
+ │   └──────────────┘     └──────────────┘     └──────────────┘     │
+ │            │                        ▲                    │        │
+ │            ▼                        │                    ▼        │
+ │        PostgreSQL  ◄──────────►  Kafka Broker ◄─────► Market API  │
+ └──────────────────────────────────────────────────────────────────┘
+
+
 ![Screenshot 2025-11-06 at 17 36 24 (2)](https://github.com/user-attachments/assets/5be86fcd-9451-4b1c-baae-73de73a427f7)
 
 
