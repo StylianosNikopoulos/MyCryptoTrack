@@ -8,17 +8,16 @@ It continuously streams live market data, lets users create personalized buy/sel
 ## 🚀 Features
 
 ### 🧩 Backend (Spring Boot Microservices)
-- **Market Service:**  
+- **Market Management:**  
   Fetches and streams live cryptocurrency data from public APIs.  
   Publishes updates to Kafka and persists market data in PostgreSQL.
-- **Alert Service:**  
+- **Alert Management:**  
   Handles alert creation, updates, and deletions.  
   Consumes market data from Kafka to trigger alerts when target prices are reached.  
   Sends email + in-app notifications via notification service.
-- **Auth Service:**  
-  Secure user registration and JWT-based authentication.
-- **Notification Service:**  
   Stores and serves triggered alerts for users.
+- **Auth Management:**  
+  Secure user registration and JWT-based authentication.
 
 ### 💻 Frontend (React)
 - Real-time live ticker of cryptocurrency prices using Server-Sent Events.
